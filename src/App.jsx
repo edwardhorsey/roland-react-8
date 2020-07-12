@@ -139,8 +139,8 @@ class App extends Component {
           <ProgramSteps title={'Kick'} />
           </article>
 
-          <Button text={'Start'} logic={this.start()} />
-          <Button text={'Stop'} logic={this.stop()} />
+          <Button text={'Start'} logic={this.start} />
+          <Button text={'Stop'} logic={this.stop} />
 
 
       </div>
