@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import './App.css';
+import styles from './App.module.scss';
+import ProgramSteps from "./Components/ProgramSteps";
+import Button from "./Components/Button";
+
 // import { context, bufferLoader, setupSample } from './engine/audio-context/audio-context'
 
 import clap from './data/sounds/wa_808tape_clap_01_sat.wav';
@@ -10,15 +13,12 @@ import kick from './data/sounds/wa_808tape_kick_09_sat.wav';
 
 let filenames = [ clap, hat, crash, hitom, kick ];
 
-
-
-// import { AudioBufferSource } from "./engine/use-audio-hooks/AudioBufferSource";
-
-
-
-export let context; // the Audio Context
-export let bufferLoader; // our loaded samples will live here
-export let unlocked = false;
+let context; // the Audio Context
+let bufferLoader; // our loaded samples will live here
+let lookahead = 25.0; // How frequently to call scheduling function (in milliseconds)
+let scheduleAheadTime = 0.250; // How far ahead to schedule audio (sec)
+let timerID;
+let unlocked = false;
 
 
 async function getFile(audioContext, filepath) {
@@ -30,49 +30,117 @@ async function getFile(audioContext, filepath) {
 
 async function setupSample(files) {
   let array = [];
-  for (let i=0; i<filenames.length; i++){
+  for (let i=0; i<files.length; i++){
     const sample = await getFile(context, filenames[i]);
     array.push(sample);
     }
   return array;
 }
 
-// window.addEventListener(
-//   'load',
-//   setupSample()
-//     .then(buffers => {
-//       bufferLoader = buffers;
-//       console.log('loaded sounds');
-//     }),
-//   false
-// );
+function playSample(audioContext, audioBuffer, time) {
+  const sampleSource = audioContext.createBufferSource();
+  sampleSource.buffer = audioBuffer;
+  sampleSource.connect(audioContext.destination)
+  sampleSource.start(time);
+  return sampleSource;
+}
+
+let loop = [];
+
+loop.push(
+[ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,1 ],
+[ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
+[ 0,1,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ],
+[ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
+[ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
+)
 
 
+// Playing notes in a sequence by loading a queue ahead of time.
 
+const tempo = 110; // BPM (beats per minute)
+let current16thNote = 0;
+let nextNoteTime = 0.0; // when the next note is due.
 
+const nextNote = () => {
+  const secondsPerBeat = 60.0/tempo;
+  nextNoteTime += 0.25 * secondsPerBeat;
+  current16thNote++;
+  if (current16thNote === 16) current16thNote = 0;
+};
 
+const notesInQueue = [];
+
+const scheduleNote = (beatNumber, time) => {
+
+  // console.log(time);
+  // notesInQueue.push({  note: beatNumber, time: time  });
+
+  console.log(current16thNote, beatNumber);  
+
+  if (loop[0][current16thNote]) playSample(context, bufferLoader[0], time);
+  if (loop[1][current16thNote]) playSample(context, bufferLoader[1], time);
+  if (loop[2][current16thNote]) playSample(context, bufferLoader[2], time);
+  if (loop[3][current16thNote]) playSample(context, bufferLoader[3], time);
+  if (loop[4][current16thNote]) playSample(context, bufferLoader[4], time);
+
+}
+
+const scheduler = () => {
+  // while there are notes that will need to play before the next interval, schedule them and advance the pointer.
+  while (nextNoteTime < context.currentTime + scheduleAheadTime ) { 
+      scheduleNote(current16thNote, nextNoteTime);
+      nextNote();
+  }
+  timerID = window.setTimeout(scheduler, lookahead);
+}
 
 class App extends Component {
 
   async componentDidMount(){
-
     context = new AudioContext();
     await setupSample(filenames)
     .then(buffers => {
       bufferLoader = buffers;
       console.log('loaded sounds');
+      console.log(bufferLoader);
     })
+    .catch(err => console.log(err))
   }
 
- 
+  start = () => {
+    if (!unlocked) {
+      // play silent buffer to unlock the audio
+      var buffer = context.createBuffer(1, 1, 22050);
+      var node = context.createBufferSource();
+      node.buffer = buffer;
+      node.start(0);
+      unlocked = true;
+    }
+    nextNoteTime = context.currentTime; // Important: takes time from when you start scheduling the sequencing
+    scheduler();
+  }
+
+  stop = () => {
+    window.clearTimeout(timerID);
+  }
+
   render() {
 
 
     return (
-      <div className="App">
-        {/* <AudioContext> */}
-          <p>hi</p>
-        {/* </AudioContext> */}
+      <div className={styles.app}>
+          <p>Roland-React-8</p>
+          <article className={styles.sequencer}>
+          <ProgramSteps title={'Clap'} />
+          <ProgramSteps title={'Hat'} />
+          <ProgramSteps title={'Cymbal'} />
+          <ProgramSteps title={'Hi Tom'} />
+          <ProgramSteps title={'Kick'} />
+          </article>
+
+          <Button text={'Start'} logic={this.start()} />
+          <Button text={'Stop'} logic={this.stop()} />
 
 
       </div>
