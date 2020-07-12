@@ -8,9 +8,6 @@ import crash from './data/sounds/wa_808tape_crash_02_sat.wav';
 import hitom from './data/sounds/wa_808tape_hitom_01_sat.wav';
 import kick from './data/sounds/wa_808tape_kick_09_sat.wav';
 
-
-
-
 let filenames = [ clap, hat, crash, hitom, kick ];
 
 
