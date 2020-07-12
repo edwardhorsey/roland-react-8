@@ -10656,6 +10656,11 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
+use-audio@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/use-audio/-/use-audio-0.0.1.tgz#38c37ad78561f96f94b88d51f85fb0b2ed9b6a16"
+  integrity sha512-OvyzxytwCzC5P+P5M9aNrzvgfxk8RCrfCklvSJkj56mdhMnQGIv1kAqExSzQGe7+KwI8xlCQx96Vq8Iun6zG0g==
+
 use@^3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
