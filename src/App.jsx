@@ -45,15 +45,15 @@ function playSample(audioContext, audioBuffer, time) {
   return sampleSource;
 }
 
-let loop = [];
+let loop = {};
 
-loop.push(
-[ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,1 ],
-[ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
-[ 0,1,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ],
-[ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
-[ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
-)
+loop = {
+  'Clap': [ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,1 ],
+  'Hat': [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
+  'Cymbal': [ 0,1,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ],
+  'Hi Tom': [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
+  'Kick': [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
+}
 
 
 // Playing notes in a sequence by loading a queue ahead of time.
@@ -69,7 +69,7 @@ const nextNote = () => {
   if (current16thNote === 16) current16thNote = 0;
 };
 
-const notesInQueue = [];
+// const notesInQueue = [];
 
 const scheduleNote = (beatNumber, time) => {
 
@@ -78,11 +78,11 @@ const scheduleNote = (beatNumber, time) => {
 
   console.log(current16thNote, beatNumber);  
 
-  if (loop[0][current16thNote]) playSample(context, bufferLoader[0], time);
-  if (loop[1][current16thNote]) playSample(context, bufferLoader[1], time);
-  if (loop[2][current16thNote]) playSample(context, bufferLoader[2], time);
-  if (loop[3][current16thNote]) playSample(context, bufferLoader[3], time);
-  if (loop[4][current16thNote]) playSample(context, bufferLoader[4], time);
+  if (loop['Clap'][current16thNote]) playSample(context, bufferLoader[0], time);
+  if (loop['Hat'][current16thNote]) playSample(context, bufferLoader[1], time);
+  if (loop['Cymbal'][current16thNote]) playSample(context, bufferLoader[2], time);
+  if (loop['Hi Tom'][current16thNote]) playSample(context, bufferLoader[3], time);
+  if (loop['Kick'][current16thNote]) playSample(context, bufferLoader[4], time);
 
 }
 
@@ -125,31 +125,26 @@ class App extends Component {
     window.clearTimeout(timerID);
   }
 
-  getNotes = (instr, array) => {
-    return this.updateLoop(instr, array);
-  }
-
   updateLoop = (instr, array) => {
+    console.log('updating', instr, 'with', array)
     loop[instr] = array;
   }
 
   render() {
 
-
     return (
       <div className={styles.app}>
           <p>Roland-React-8</p>
           <article className={styles.sequencer}>
-          <ProgramSteps title={'Clap'} returnNotes={this.getNotes} />
-          <ProgramSteps title={'Hat'} returnNotes={this.getNotes} />
-          <ProgramSteps title={'Cymbal'} returnNotes={this.getNotes} />
-          <ProgramSteps title={'Hi Tom'} returnNotes={this.getNotes} />
-          <ProgramSteps title={'Kick'} returnNotes={this.getNotes} />
+            <ProgramSteps title={'Clap'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Hat'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Cymbal'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Hi Tom'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Kick'} updateLoop={this.updateLoop} />
           </article>
 
           <Button text={'Start'} logic={this.start} />
           <Button text={'Stop'} logic={this.stop} />
-
 
       </div>
     );

@@ -4,20 +4,28 @@ import styles from './ProgramSteps.module.scss';
 
 class ProgramSteps extends Component {
 
+  state = {
+    sequence: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ],
+  }
+
   renderSteps = (num) => {
     let output = [];
     for (let i=0; i<num; i++) {
-      output.push(<Step key={i}/>)
+      output.push(<Step step={i} key={i} logic={this.activateNote} />)
     }
-    console.log(output);
     return output;
+  }
+
+  activateNote = (event) => {
+    let newArray = this.state.sequence;
+    newArray[Number(event.target.name)] = event.target.checked ? 1 : 0
+    this.setState({ sequence: newArray });
+    return this.props.updateLoop(this.props.title, newArray);
   }
 
   render() { 
 
     const steps =  this.renderSteps(16)
-console.log('hi')
-    console.log(steps);
 
 
     return (
