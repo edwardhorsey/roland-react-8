@@ -125,6 +125,14 @@ class App extends Component {
     window.clearTimeout(timerID);
   }
 
+  getNotes = (instr, array) => {
+    return this.updateLoop(instr, array);
+  }
+
+  updateLoop = (instr, array) => {
+    loop[instr] = array;
+  }
+
   render() {
 
 
@@ -132,11 +140,11 @@ class App extends Component {
       <div className={styles.app}>
           <p>Roland-React-8</p>
           <article className={styles.sequencer}>
-          <ProgramSteps title={'Clap'} />
-          <ProgramSteps title={'Hat'} />
-          <ProgramSteps title={'Cymbal'} />
-          <ProgramSteps title={'Hi Tom'} />
-          <ProgramSteps title={'Kick'} />
+          <ProgramSteps title={'Clap'} returnNotes={this.getNotes} />
+          <ProgramSteps title={'Hat'} returnNotes={this.getNotes} />
+          <ProgramSteps title={'Cymbal'} returnNotes={this.getNotes} />
+          <ProgramSteps title={'Hi Tom'} returnNotes={this.getNotes} />
+          <ProgramSteps title={'Kick'} returnNotes={this.getNotes} />
           </article>
 
           <Button text={'Start'} logic={this.start} />
