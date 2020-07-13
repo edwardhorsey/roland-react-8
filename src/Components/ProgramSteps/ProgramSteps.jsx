@@ -30,10 +30,10 @@ class ProgramSteps extends Component {
 
     return (
       <article className={styles.instrument}>
-      <h2>{this.props.title}</h2>
-      <section>
-        {steps}
-      </section>
+        <h2>{this.props.title}</h2>
+        <section>
+          {steps}
+        </section>
       </article>
      );
   }
