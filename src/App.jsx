@@ -2,16 +2,11 @@ import React, { Component } from 'react';
 import styles from './App.module.scss';
 import ProgramSteps from "./Components/ProgramSteps";
 import Button from "./Components/Button";
+import InstrumentControls from "./Components/InstrumentControls";
 
 // import { context, bufferLoader, setupSample } from './engine/audio-context/audio-context'
 
-import clap from './data/sounds/wa_808tape_clap_01_sat.wav';
-import hat from './data/sounds/wa_808tape_closedhat_09_sat.wav';
-import crash from './data/sounds/wa_808tape_crash_02_sat.wav';
-import hitom from './data/sounds/wa_808tape_hitom_01_sat.wav';
-import kick from './data/sounds/wa_808tape_kick_09_sat.wav';
-
-let filenames = [ clap, hat, crash, hitom, kick ];
+import { filenames } from "./data/filenames";
 
 let context; // the Audio Context
 let bufferLoader; // our loaded samples will live here
@@ -58,7 +53,7 @@ loop = {
 
 // Playing notes in a sequence by loading a queue ahead of time.
 
-const tempo = 110; // BPM (beats per minute)
+let tempo = 110; // BPM (beats per minute)
 let current16thNote = 0;
 let nextNoteTime = 0.0; // when the next note is due.
 
@@ -130,11 +125,16 @@ class App extends Component {
     loop[instr] = array;
   }
 
+  updateTempo = (event) => {
+    tempo = event.target.value;
+  }
+
   render() {
 
     return (
       <div className={styles.app}>
           <p>Roland-React-8</p>
+          <InstrumentControls tempo={tempo} updateTempo={this.updateTempo} />
           <article className={styles.sequencer}>
             <ProgramSteps title={'Clap'} updateLoop={this.updateLoop} />
             <ProgramSteps title={'Hat'} updateLoop={this.updateLoop} />
