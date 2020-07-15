@@ -3,7 +3,8 @@ import styles from './App.module.scss';
 import ProgramSteps from "./Components/ProgramSteps";
 import Button from "./Components/Button";
 import InstrumentControls from "./Components/InstrumentControls";
-
+import Hosting from "./Components/Hosting";
+// import Routes from "./Components/Routes/Routes";
 // import { context, bufferLoader, setupSample } from './engine/audio-context/audio-context'
 
 import { filenames } from "./data/filenames";
@@ -146,6 +147,7 @@ class App extends Component {
           <Button text={'Start'} logic={this.start} />
           <Button text={'Stop'} logic={this.stop} />
 
+          <Hosting />
       </div>
     );
   }
