@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import styles from './Hosting.module.scss';
 import firebase, { provider } from "../../firebase";
-import Routes from "../Routes";
+import Routes from "../RoutingFolder";
 
 class Hosting extends Component {
   state = {
