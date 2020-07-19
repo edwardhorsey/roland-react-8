@@ -1,7 +1,12 @@
-.instrument {
+.instrControls {
   display: flex;
+  flex-direction: column;
 
   section {
-    display: flex;
+      display: flex;
+      flex-direction: row;
+      
+      button {
+      }
+    }
   }
-}

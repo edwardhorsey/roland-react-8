@@ -10,7 +10,10 @@ import SampleControls from './Components/SampleControls';
 
 let context; // the Audio Context
 let bufferLoader; // our loaded samples will live here
+let masterGain; // whole drum machine
 let gainNodes; // our gain nodes will live here
+let distortion; // variable for storing distortion
+let distGain;
 // let pitchNodes; // our pitch effects will live here
 let lookahead = 25.0; // How frequently to call scheduling function (in milliseconds)
 let scheduleAheadTime = 0.250; // How far ahead to schedule audio (sec)
@@ -43,11 +46,31 @@ function setupGainNodes(files) {
   return obj;
 }
 
+
+
+function makeDistortionCurve(amount) {
+  var k = typeof amount === 'number' ? amount : 50,
+  n_samples = 48000,
+  curve = new Float32Array(n_samples),
+  deg = Math.PI / 180,
+  i = 0,
+  x;
+  for ( ; i < n_samples; ++i ) {
+    x = i * 2 / n_samples - 1;
+    curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
+  }
+  return curve;
+};
+
+
 function playSample(audioContext, audioBuffer, gainNode, time) {
   const sampleSource = audioContext.createBufferSource();
   sampleSource.buffer = audioBuffer;
-  sampleSource.connect(gainNode)
-  gainNode.connect(audioContext.destination)
+  // sampleSource.connect(gainNode);
+  sampleSource.connect(distortion);
+  distortion.connect(gainNode);
+  gainNode.connect(masterGain)
+  masterGain.connect(audioContext.destination)
   sampleSource.start(time);
   return sampleSource;
 }
@@ -56,16 +79,18 @@ let loop = {};
 
 loop = {
   'Clap': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,1 ],
-  'Hat': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
+  'Hat': [ 0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,0  ], // [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
+  'Open Hat': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
   'Cymbal': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,1,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ],
   'Hi Tom': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
-  'Kick': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
+  'Lo Tom': [ 0,0,0,0, 0,0,1,0, 0,0,0,0, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
+  'Kick': [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, ], // [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
 }
 
 
 // Playing notes in a sequence by loading a queue ahead of time.
 
-let tempo = 110; // BPM (beats per minute)
+let tempo; // BPM (beats per minute)
 let current16thNote = 0;
 let nextNoteTime = 0.0; // when the next note is due.
 
@@ -87,8 +112,10 @@ const scheduleNote = (beatNumber, time) => {
 
   if (loop['Clap'][current16thNote]) playSample(context, bufferLoader['Clap'], gainNodes['Clap'], time);
   if (loop['Hat'][current16thNote]) playSample(context, bufferLoader['Hat'], gainNodes['Hat'], time);
+  if (loop['Open Hat'][current16thNote]) playSample(context, bufferLoader['Open Hat'], gainNodes['Open Hat'], time);
   if (loop['Cymbal'][current16thNote]) playSample(context, bufferLoader['Cymbal'], gainNodes['Cymbal'], time);
   if (loop['Hi Tom'][current16thNote]) playSample(context, bufferLoader['Hi Tom'], gainNodes['Hi Tom'], time);
+  if (loop['Lo Tom'][current16thNote]) playSample(context, bufferLoader['Lo Tom'], gainNodes['Lo Tom'], time);
   if (loop['Kick'][current16thNote]) playSample(context, bufferLoader['Kick'], gainNodes['Kick'], time);
 
 }
@@ -124,7 +151,20 @@ class App extends Component {
       gainNodes = setupGainNodes(filenames);
       console.log('loaded gain nodes');
       console.log(gainNodes);
-      this.setState({ gain: 90 })
+      this.setState({ gain: 90 });
+    })
+    .then(() => {
+      distortion = context.createWaveShaper();
+      distortion.curve = makeDistortionCurve(0);
+      distortion.oversample = '4x';
+      distGain = context.createGain();
+      console.log('loaded distortion & dist gain');
+      console.log(distortion, distGain);  
+    })    
+    .then(() => {
+      masterGain = context.createGain();
+      console.log('loaded master gain');
+      console.log(masterGain);
     })
     .catch(err => console.log(err))
   }
@@ -155,6 +195,20 @@ class App extends Component {
     if (gainNodes) { gainNodes[instr].gain.value = value/100 }
   }
 
+  updateMaster = (value) => {
+    if (masterGain) { masterGain.gain.value = value/100 }
+  }
+
+  distortionToggle = (value) => {
+    console.log('hello')
+    if (value) {
+      distortion.curve = makeDistortionCurve(20)
+    } else {
+      distortion.curve = makeDistortionCurve(0)
+    }
+    console.log(distGain.gain)
+  }
+
   updateTempo = (newTempo) => {
     tempo = newTempo;
   }
@@ -164,26 +218,30 @@ class App extends Component {
     return (
       <div className={styles.app}>
           <p>Roland-React-8</p>
-          <InstrumentControls tempo={tempo} updateTempo={this.updateTempo} />
+          <Button text={'Start'} logic={this.start} />
+          <Button text={'Stop'} logic={this.stop} />
+          <InstrumentControls tempo={tempo} updateTempo={this.updateTempo} updateGain={this.updateMaster} distToggle={this.distortionToggle} />
 
           <article className={styles.sampleControls}>
             <SampleControls title={'Clap'} updateGain={this.updateGain} />
             <SampleControls title={'Hat'} updateGain={this.updateGain} />
+            <SampleControls title={'Open Hat'} updateGain={this.updateGain} />
             <SampleControls title={'Cymbal'} updateGain={this.updateGain} />
             <SampleControls title={'Hi Tom'} updateGain={this.updateGain} />
+            <SampleControls title={'Lo Tom'} updateGain={this.updateGain} />
             <SampleControls title={'Kick'} updateGain={this.updateGain} />
           </article>
 
           <article className={styles.sequencer}>
             <ProgramSteps title={'Clap'} updateLoop={this.updateLoop} />
             <ProgramSteps title={'Hat'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Open Hat'} updateLoop={this.updateLoop} />
             <ProgramSteps title={'Cymbal'} updateLoop={this.updateLoop} />
             <ProgramSteps title={'Hi Tom'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Lo Tom'} updateLoop={this.updateLoop} />
             <ProgramSteps title={'Kick'} updateLoop={this.updateLoop} />
           </article>
 
-          <Button text={'Start'} logic={this.start} />
-          <Button text={'Stop'} logic={this.stop} />
 
           <Hosting />
       </div>

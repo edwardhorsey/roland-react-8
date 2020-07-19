@@ -8,14 +8,8 @@ class SampleControls extends Component {
     gain: 90,
   }
 
-  func = () => {
-    // this.props.updateSettings('Clap', 'Gain', 0.8)
-    // this.props.updateSettings('Cymbal', 'Gain', 0.2)
-    // this.props.updateSettings('Kick', 'Gain', 0.5)
-  }
-
   valueChange = gain => {
-    this.setState({ gain })
+    this.setState({ gain: gain })
     this.props.updateGain(this.props.title, gain)
   }
 
@@ -33,7 +27,7 @@ class SampleControls extends Component {
           diameter={100}
           min={0}
           max={100}
-          step={1}
+          step={5}
           value={this.state.gain}
           theme={{
               donutColor: 'Black'
