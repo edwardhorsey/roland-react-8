@@ -10,7 +10,7 @@
     "firebase": "^7.16.0",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
-    "react-canvas-knob": "^0.5.0",
+    "react-dial-knob": "^1.1.5",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "use-audio": "^0.0.1"

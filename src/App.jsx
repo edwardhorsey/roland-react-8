@@ -4,15 +4,14 @@ import ProgramSteps from "./Components/ProgramSteps";
 import Button from "./Components/Button";
 import InstrumentControls from "./Components/InstrumentControls";
 import Hosting from "./Components/Hosting";
-// import Routes from "./Components/Routes/Routes";
-// import { context, bufferLoader, setupSample } from './engine/audio-context/audio-context'
 
 import { filenames } from "./data/filenames";
+import SampleControls from './Components/SampleControls';
 
 let context; // the Audio Context
 let bufferLoader; // our loaded samples will live here
 let gainNodes; // our gain nodes will live here
-let pitchNodes; // our pitch effects will live here
+// let pitchNodes; // our pitch effects will live here
 let lookahead = 25.0; // How frequently to call scheduling function (in milliseconds)
 let scheduleAheadTime = 0.250; // How far ahead to schedule audio (sec)
 let timerID;
@@ -56,11 +55,11 @@ function playSample(audioContext, audioBuffer, gainNode, time) {
 let loop = {};
 
 loop = {
-  'Clap': [ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,1 ],
-  'Hat': [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
-  'Cymbal': [ 0,1,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ],
-  'Hi Tom': [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
-  'Kick': [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
+  'Clap': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,1 ],
+  'Hat': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
+  'Cymbal': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,1,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ],
+  'Hi Tom': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
+  'Kick': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
 }
 
 
@@ -125,7 +124,7 @@ class App extends Component {
       gainNodes = setupGainNodes(filenames);
       console.log('loaded gain nodes');
       console.log(gainNodes);
-
+      this.setState({ gain: 90 })
     })
     .catch(err => console.log(err))
   }
@@ -152,16 +151,12 @@ class App extends Component {
     loop[instr] = array;
   }
 
-  updateSettings = (instr, attr, value) => {
-    this.setState({
-      [instr]: {...this.state[instr], [attr]: value}
-    })
-    if (attr = 'Gain') gainNodes[instr].gain.value = value;
-
+  updateGain = (instr, value) => {
+    if (gainNodes) { gainNodes[instr].gain.value = value/100 }
   }
 
-  updateTempo = (event) => {
-    tempo = event.target.value;
+  updateTempo = (newTempo) => {
+    tempo = newTempo;
   }
 
   render() {
@@ -170,12 +165,21 @@ class App extends Component {
       <div className={styles.app}>
           <p>Roland-React-8</p>
           <InstrumentControls tempo={tempo} updateTempo={this.updateTempo} />
+
+          <article className={styles.sampleControls}>
+            <SampleControls title={'Clap'} updateGain={this.updateGain} />
+            <SampleControls title={'Hat'} updateGain={this.updateGain} />
+            <SampleControls title={'Cymbal'} updateGain={this.updateGain} />
+            <SampleControls title={'Hi Tom'} updateGain={this.updateGain} />
+            <SampleControls title={'Kick'} updateGain={this.updateGain} />
+          </article>
+
           <article className={styles.sequencer}>
-            <ProgramSteps title={'Clap'} updateLoop={this.updateLoop} updateSettings={this.updateSettings} />
-            <ProgramSteps title={'Hat'} updateLoop={this.updateLoop} updateSettings={this.updateSettings} />
-            <ProgramSteps title={'Cymbal'} updateLoop={this.updateLoop} updateSettings={this.updateSettings} />
-            <ProgramSteps title={'Hi Tom'} updateLoop={this.updateLoop} updateSettings={this.updateSettings} />
-            <ProgramSteps title={'Kick'} updateLoop={this.updateLoop} updateSettings={this.updateSettings} />
+            <ProgramSteps title={'Clap'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Hat'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Cymbal'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Hi Tom'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Kick'} updateLoop={this.updateLoop} />
           </article>
 
           <Button text={'Start'} logic={this.start} />

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import styles from './Hosting.module.scss';
 import firebase, { provider } from "../../firebase";
-import Routes from "../Routes";
+import Button from "../Button";
 
 class Hosting extends Component {
   state = {
@@ -37,8 +37,8 @@ class Hosting extends Component {
       <>
         <p>Hello from hosting</p>
         {userDetails}
-        <button onClick={this.signIn}>Sign in</button>
-        <button onClick={this.signOut}>Sign out</button>
+        <Button text="Sign in" logic={this.signIn} />
+        <Button text="Sign out" logic={this.signOut} />
 
       {/* <Routes user={this.state.user} /> */}
 

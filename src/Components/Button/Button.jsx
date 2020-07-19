@@ -5,7 +5,7 @@ import styles from './Button.module.scss';
 class Button extends Component {
 
   render() { 
-  return <button onClick={this.props.logic}>{this.props.text}</button>
+  return <button className={styles.button} onClick={this.props.logic}>{this.props.text}</button>
   }
 }
  

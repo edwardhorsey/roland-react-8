@@ -9088,7 +9088,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.4"
 
-prop-types@^15.5.10, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9278,13 +9278,6 @@ react-app-polyfill@^1.0.6:
     regenerator-runtime "^0.13.3"
     whatwg-fetch "^3.0.0"
 
-react-canvas-knob@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/react-canvas-knob/-/react-canvas-knob-0.5.0.tgz#5712742379345ab872d7999046989cf2be574172"
-  integrity sha512-KTxOpeluRXcC+VO6VJkhxvUHMlHQH+do4DBQdQZP8deI/F1kcI023lLON+NVwrM2KQsKUoFldOr1OpttVN0iVA==
-  dependencies:
-    prop-types "^15.5.10"
-
 react-dev-utils@^10.2.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-10.2.1.tgz#f6de325ae25fa4d546d09df4bb1befdc6dd19c19"
@@ -9314,6 +9307,11 @@ react-dev-utils@^10.2.1:
     shell-quote "1.7.2"
     strip-ansi "6.0.0"
     text-table "0.2.0"
+
+react-dial-knob@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/react-dial-knob/-/react-dial-knob-1.1.5.tgz#9ec1d8f450ed36b383c1150e7d2b32ac53616073"
+  integrity sha512-lo6RBzK9H8FhWLdx5JHXOX2Yf7pEzoycusuGNQMeypLlalRItWp0KoG4EttYn9HWv4BMPvG6IT0GdOyNqjAW2w==
 
 react-dom@^16.13.1:
   version "16.13.1"

@@ -9,13 +9,6 @@ class ProgramSteps extends Component {
   }
 
   componentDidMount() {
-    setTimeout(this.func, 3000)
-  }
-
-  func = () => {
-    // this.props.updateSettings('Clap', 'Gain', 0.8)
-    // this.props.updateSettings('Cymbal', 'Gain', 0.2)
-    // this.props.updateSettings('Kick', 'Gain', 0.5)
   }
 
   renderSteps = (num) => {
@@ -36,7 +29,7 @@ class ProgramSteps extends Component {
   render() { 
 
     const steps =  this.renderSteps(16)
-    const stepClass = this.props
+    // const stepClass = this.props
 
     return (
       <article className={styles.instrument}>

@@ -1,7 +1,17 @@
 import React, { Component } from 'react';
 import styles from './InstrumentControls.module.scss';
+import { Donut } from 'react-dial-knob'
+
 
 class InstrumentControls extends Component {
+
+  state = {
+    tempo: 120,
+  }
+  valueChange = tempo => {
+    this.setState({ tempo });
+    this.props.updateTempo(tempo);
+  }
 
 
   render() { 
@@ -10,7 +20,21 @@ class InstrumentControls extends Component {
     return (
       <section className={styles.instrControls}>
         <h3>Tempo</h3>
-        <input type="range" min="30" max="240" value={this.props.tempo} class="slider" id="tempo" onChange={this.props.updateTempo} />
+        <Donut
+          diameter={100}
+          min={30}
+          max={240}
+          step={1}
+          value={this.state.tempo}
+          theme={{
+              donutColor: 'Black'
+          }}
+          onValueChange={this.valueChange}
+          ariaLabelledBy={'my-label'}
+        >
+          <label id={'my-label'}>Tempo</label>
+        </Donut>
+
       </section>
      );
   }
