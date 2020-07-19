@@ -4,4 +4,4 @@ import crash from './sounds/wa_808tape_crash_02_sat.wav';
 import hitom from './sounds/wa_808tape_hitom_01_sat.wav';
 import kick from './sounds/wa_808tape_kick_09_sat.wav';
 
-export const filenames = [ clap, hat, crash, hitom, kick ];
+export const filenames = { 'Clap': clap, 'Hat': hat, 'Cymbal': crash, 'Hi Tom': hitom, 'Kick': kick };

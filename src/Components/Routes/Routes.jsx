@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-// import { Router } from "@reach/router";
-// import { firestore } from "../../firebase";
-import OwnBeats from "";
+import { Router } from "@reach/router";
+import { firestore } from "../../firebase";
 import PrivateRoutes from "../PrivateRoutes";
 
 class Routes extends Component {
@@ -11,11 +10,11 @@ class Routes extends Component {
 
     return (
       <>
-        {/* <Router>
+        <Router>
           <PrivateRoutes path="/" user={this.props.user}>
-            <OwnBeats path="ownbeats" user={this.props.user}/>
+            {/* <OwnBeats path="ownbeats" user={this.props.user}/> */}
           </PrivateRoutes>
-        </Router> */}
+        </Router>
         <p>hi from router</p>
       </>
      );

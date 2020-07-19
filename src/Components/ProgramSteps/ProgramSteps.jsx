@@ -8,6 +8,16 @@ class ProgramSteps extends Component {
     sequence: [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ],
   }
 
+  componentDidMount() {
+    setTimeout(this.func, 3000)
+  }
+
+  func = () => {
+    // this.props.updateSettings('Clap', 'Gain', 0.8)
+    // this.props.updateSettings('Cymbal', 'Gain', 0.2)
+    // this.props.updateSettings('Kick', 'Gain', 0.5)
+  }
+
   renderSteps = (num) => {
     let output = [];
     for (let i=0; i<num; i++) {
@@ -26,7 +36,7 @@ class ProgramSteps extends Component {
   render() { 
 
     const steps =  this.renderSteps(16)
-
+    const stepClass = this.props
 
     return (
       <article className={styles.instrument}>

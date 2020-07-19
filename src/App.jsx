@@ -11,6 +11,8 @@ import { filenames } from "./data/filenames";
 
 let context; // the Audio Context
 let bufferLoader; // our loaded samples will live here
+let gainNodes; // our gain nodes will live here
+let pitchNodes; // our pitch effects will live here
 let lookahead = 25.0; // How frequently to call scheduling function (in milliseconds)
 let scheduleAheadTime = 0.250; // How far ahead to schedule audio (sec)
 let timerID;
@@ -25,18 +27,28 @@ async function getFile(audioContext, filepath) {
 }
 
 async function setupSample(files) {
-  let array = [];
-  for (let i=0; i<files.length; i++){
-    const sample = await getFile(context, filenames[i]);
-    array.push(sample);
+    let obj = {};
+    for (let prop in files) {
+      const sample = await getFile(context, files[prop])
+      obj[prop] = sample
     }
-  return array;
+  return obj;
 }
 
-function playSample(audioContext, audioBuffer, time) {
+function setupGainNodes(files) {
+  let obj = {};
+  for (let prop in files) {
+    const gain = context.createGain();
+    obj[prop] = gain;
+  }
+  return obj;
+}
+
+function playSample(audioContext, audioBuffer, gainNode, time) {
   const sampleSource = audioContext.createBufferSource();
   sampleSource.buffer = audioBuffer;
-  sampleSource.connect(audioContext.destination)
+  sampleSource.connect(gainNode)
+  gainNode.connect(audioContext.destination)
   sampleSource.start(time);
   return sampleSource;
 }
@@ -74,11 +86,11 @@ const scheduleNote = (beatNumber, time) => {
 
   console.log(current16thNote, beatNumber);  
 
-  if (loop['Clap'][current16thNote]) playSample(context, bufferLoader[0], time);
-  if (loop['Hat'][current16thNote]) playSample(context, bufferLoader[1], time);
-  if (loop['Cymbal'][current16thNote]) playSample(context, bufferLoader[2], time);
-  if (loop['Hi Tom'][current16thNote]) playSample(context, bufferLoader[3], time);
-  if (loop['Kick'][current16thNote]) playSample(context, bufferLoader[4], time);
+  if (loop['Clap'][current16thNote]) playSample(context, bufferLoader['Clap'], gainNodes['Clap'], time);
+  if (loop['Hat'][current16thNote]) playSample(context, bufferLoader['Hat'], gainNodes['Hat'], time);
+  if (loop['Cymbal'][current16thNote]) playSample(context, bufferLoader['Cymbal'], gainNodes['Cymbal'], time);
+  if (loop['Hi Tom'][current16thNote]) playSample(context, bufferLoader['Hi Tom'], gainNodes['Hi Tom'], time);
+  if (loop['Kick'][current16thNote]) playSample(context, bufferLoader['Kick'], gainNodes['Kick'], time);
 
 }
 
@@ -93,6 +105,14 @@ const scheduler = () => {
 
 class App extends Component {
 
+  state = {
+    'Clap': {},
+    'Hat': {},
+    'Cymbal': {},
+    'Hi Tom': {},
+    'Kick': {},
+  }
+
   async componentDidMount(){
     context = new AudioContext();
     await setupSample(filenames)
@@ -100,6 +120,12 @@ class App extends Component {
       bufferLoader = buffers;
       console.log('loaded sounds');
       console.log(bufferLoader);
+    })
+    .then(() => {
+      gainNodes = setupGainNodes(filenames);
+      console.log('loaded gain nodes');
+      console.log(gainNodes);
+
     })
     .catch(err => console.log(err))
   }
@@ -126,6 +152,14 @@ class App extends Component {
     loop[instr] = array;
   }
 
+  updateSettings = (instr, attr, value) => {
+    this.setState({
+      [instr]: {...this.state[instr], [attr]: value}
+    })
+    if (attr = 'Gain') gainNodes[instr].gain.value = value;
+
+  }
+
   updateTempo = (event) => {
     tempo = event.target.value;
   }
@@ -137,11 +171,11 @@ class App extends Component {
           <p>Roland-React-8</p>
           <InstrumentControls tempo={tempo} updateTempo={this.updateTempo} />
           <article className={styles.sequencer}>
-            <ProgramSteps title={'Clap'} updateLoop={this.updateLoop} />
-            <ProgramSteps title={'Hat'} updateLoop={this.updateLoop} />
-            <ProgramSteps title={'Cymbal'} updateLoop={this.updateLoop} />
-            <ProgramSteps title={'Hi Tom'} updateLoop={this.updateLoop} />
-            <ProgramSteps title={'Kick'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Clap'} updateLoop={this.updateLoop} updateSettings={this.updateSettings} />
+            <ProgramSteps title={'Hat'} updateLoop={this.updateLoop} updateSettings={this.updateSettings} />
+            <ProgramSteps title={'Cymbal'} updateLoop={this.updateLoop} updateSettings={this.updateSettings} />
+            <ProgramSteps title={'Hi Tom'} updateLoop={this.updateLoop} updateSettings={this.updateSettings} />
+            <ProgramSteps title={'Kick'} updateLoop={this.updateLoop} updateSettings={this.updateSettings} />
           </article>
 
           <Button text={'Start'} logic={this.start} />
