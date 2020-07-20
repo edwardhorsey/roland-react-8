@@ -24,18 +24,19 @@ class SampleControls extends Component {
         <h2>{this.props.title}</h2>
         <p>Knobs</p>
         <Donut
-          diameter={100}
+          diameter={110}
           min={0}
           max={100}
+          font-size={10}
           step={5}
           value={this.state.gain}
           theme={{
               donutColor: 'Black'
           }}
           onValueChange={this.valueChange}
-          ariaLabelledBy={'my-label'}
+          ariaLabelledBy={this.props.title}
         >
-          <label id={'my-label'}>Gain</label>
+          <label id={this.props.title}>Gain</label>
         </Donut>
       </article>
      );

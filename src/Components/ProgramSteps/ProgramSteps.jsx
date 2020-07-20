@@ -14,7 +14,7 @@ class ProgramSteps extends Component {
   renderSteps = (num) => {
     let output = [];
     for (let i=0; i<num; i++) {
-      output.push(<Step step={i} key={i} logic={this.activateNote} />)
+      output.push(<Step step={i} key={i} logic={this.activateNote} group={(i+1)%4===0 ? true : false} />)
     }
     return output;
   }

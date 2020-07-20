@@ -1,7 +1,15 @@
 .instrument {
   display: flex;
+  justify-content: space-evenly;
 
+  h2 {
+    width: 10%;
+  }
   section {
     display: flex;
+    input {
+      width: 30px;
+      height: 30px;
+    }
   }
 }

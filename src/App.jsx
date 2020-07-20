@@ -63,13 +63,13 @@ function makeDistortionCurve(amount) {
 };
 
 
-function playSample(audioContext, audioBuffer, gainNode, time) {
+function playSample(audioContext, audioBuffer, instrNode, time) {
   const sampleSource = audioContext.createBufferSource();
   sampleSource.buffer = audioBuffer;
-  // sampleSource.connect(gainNode);
-  sampleSource.connect(distortion);
-  distortion.connect(gainNode);
-  gainNode.connect(masterGain)
+  sampleSource.connect(instrNode);
+  // distortion.connect(instrNode);
+  // distGain.connect(instrNode);
+  instrNode.connect(masterGain)
   masterGain.connect(audioContext.destination)
   sampleSource.start(time);
   return sampleSource;
@@ -192,19 +192,25 @@ class App extends Component {
   }
 
   updateGain = (instr, value) => {
-    if (gainNodes) { gainNodes[instr].gain.value = value/100 }
+    if (gainNodes) { 
+      gainNodes[instr].gain.value = value/100 
+      console.log(value/100, value, gainNodes[instr])
+    }
+    console.log(instr)
   }
 
   updateMaster = (value) => {
-    if (masterGain) { masterGain.gain.value = value/100 }
+    if (masterGain) { masterGain.gain.value = value/100  }
   }
 
   distortionToggle = (value) => {
     console.log('hello')
     if (value) {
       distortion.curve = makeDistortionCurve(20)
+      distGain.gain.value = 0.5;
     } else {
       distortion.curve = makeDistortionCurve(0)
+      distGain.gain.value = 0.9;
     }
     console.log(distGain.gain)
   }

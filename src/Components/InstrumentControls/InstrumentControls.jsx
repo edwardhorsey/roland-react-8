@@ -40,7 +40,7 @@ class InstrumentControls extends Component {
         <h3>Instrument Controls</h3>
         <section clasName={styles.instrKnobs}>
           <Donut
-            diameter={100}
+            diameter={140}
             min={30}
             max={240}
             step={1}
@@ -54,7 +54,7 @@ class InstrumentControls extends Component {
             <label id={'my-label'}>Tempo</label>
           </Donut>
           <Donut
-            diameter={100}
+            diameter={120}
             min={0}
             max={100}
             step={1}
