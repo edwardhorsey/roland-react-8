@@ -14,7 +14,6 @@ class MachineKnobs extends Component {
       start,
       stop,
       updateGain,
-      tempo
     } = this.props
 
     console.log(this.props)
