@@ -19,7 +19,7 @@ class InstrumentControls extends Component {
 
   masterChange = master => {
     this.setState({ master });
-    this.props.updateGain(master);
+    this.props.updateMaster(master);
   }
 
   render() { 

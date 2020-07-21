@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import styles from './App.module.scss';
-import ProgramSteps from "./Components/ProgramSteps";
-import InstrumentControls from "./Components/InstrumentControls";
-import SampleControls from './Components/SampleControls';
 import Hosting from "./Components/Hosting";
+
+import { AudioProvider } from "./context/audioEngine.js";
 
 import { filenames } from "./data/filenames";
 import setupSample from "./engine/load-samples/load-samples";
+import MachineSequencer from './Containers/MachineSequencer';
+import MachineKnobs from './Containers/MachineKnobs';
 
 
 let context; // the Audio Context
@@ -175,11 +176,6 @@ class App extends Component {
     if (masterGain) { masterGain.gain.value = value/100  }
   }
 
-  distortionToggle = (value) => {
-    console.log('hello')
-    this.setState({ distortion: !this.state.distortion })
-  }
-
   updateTempo = (newTempo) => {
     tempo = newTempo;
   }
@@ -189,33 +185,17 @@ class App extends Component {
     console.log(this.state)
 
     return (
-      <div className={styles.app}>
+      <AudioProvider>
+        <div className={styles.app}>
           <p>Roland-React-8</p>
-          <InstrumentControls tempo={tempo} updateTempo={this.updateTempo} updateGain={this.updateMaster} distToggle={this.distortionToggle} start={this.start} stop={this.stop} />
-
-          <article className={styles.sampleControls}>
-            <SampleControls title={'Clap'} updateGain={this.updateGain} />
-            <SampleControls title={'Hat'} updateGain={this.updateGain} />
-            <SampleControls title={'Open Hat'} updateGain={this.updateGain} />
-            <SampleControls title={'Cymbal'} updateGain={this.updateGain} />
-            <SampleControls title={'Hi Tom'} updateGain={this.updateGain} />
-            <SampleControls title={'Lo Tom'} updateGain={this.updateGain} />
-            <SampleControls title={'Kick'} updateGain={this.updateGain} />
-          </article>
-
-          <article className={styles.sequencer}>
-            <ProgramSteps title={'Clap'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Clap']}/>
-            <ProgramSteps title={'Hat'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Hat']}/>
-            <ProgramSteps title={'Open Hat'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Open Hat']}/>
-            <ProgramSteps title={'Cymbal'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Cymbal']}/>
-            <ProgramSteps title={'Hi Tom'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Hi Tom']}/>
-            <ProgramSteps title={'Lo Tom'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Lo Tom']}/>
-            <ProgramSteps title={'Kick'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Kick']}/>
-          </article>
-
+          
+          <MachineKnobs updateTempo={this.updateTempo} updateMaster={this.updateMaster} start={this.start} stop={this.stop} updateGain={this.updateGain} />
+          
+          <MachineSequencer updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop} />
+          
           <Hosting />
-
-      </div>
+        </div>
+      </AudioProvider>
     );
   }
 }

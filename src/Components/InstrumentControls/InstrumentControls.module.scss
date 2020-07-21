@@ -5,8 +5,7 @@
   section {
       display: flex;
       flex-direction: row;
-      
-      button {
-      }
+      justify-content: space-evenly;
+      width: 50%;
     }
   }
