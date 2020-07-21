@@ -15,7 +15,7 @@ class Step extends Component {
 
   render() {
     // const stepStyle = this.props.group ? `${styles.step} ${styles.group}` : styles.step;
-    const stepStyle = this.state.selected ? styles.on : styles.off;
+    const stepStyle = this.props.loop[this.props.step] ? styles.on : styles.off;
     // return <input type="checkbox" className={stepStyle} name={this.props.step} onChange={this.props.logic} />;
     return <div className={stepStyle} name={this.props.step} onClick={this.sendToLoop}></div>;
 

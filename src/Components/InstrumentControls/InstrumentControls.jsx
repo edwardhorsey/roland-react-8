@@ -22,16 +22,6 @@ class InstrumentControls extends Component {
     this.props.updateGain(master);
   }
 
-  toggleDistortion = () => {
-    this.props.distToggle(!this.state.distortion);
-    this.setState({ distortion: !this.state.distortion })
-  }
-
-  distortionStyle = () => {
-    return this.state.distortion ? styles.distOn : styles.distOff;
-  }
-
-
   render() { 
 
 
@@ -40,7 +30,7 @@ class InstrumentControls extends Component {
         <h3>Instrument Controls</h3>
         <section clasName={styles.instrKnobs}>
           <Donut
-            diameter={140}
+            diameter={130}
             min={30}
             max={240}
             step={1}
@@ -54,7 +44,7 @@ class InstrumentControls extends Component {
             <label id={'my-label'}>Tempo</label>
           </Donut>
           <Donut
-            diameter={120}
+            diameter={130}
             min={0}
             max={100}
             step={1}
@@ -67,7 +57,6 @@ class InstrumentControls extends Component {
           >
             <label id={'my-label'}>Master Gain</label>
           </Donut>
-          <Button text={'DISTORTION'} logic={this.toggleDistortion} className={styles.distOn}/>
         </section>
 
       </section>

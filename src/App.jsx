@@ -46,31 +46,27 @@ function setupGainNodes(files) {
   return obj;
 }
 
-
-
-function makeDistortionCurve(amount) {
-  var k = typeof amount === 'number' ? amount : 50,
-  n_samples = 48000,
-  curve = new Float32Array(n_samples),
-  deg = Math.PI / 180,
-  i = 0,
-  x;
-  for ( ; i < n_samples; ++i ) {
-    x = i * 2 / n_samples - 1;
-    curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
-  }
-  return curve;
-};
+// function makeDistortionCurve(amount) {
+//   var k = typeof amount === 'number' ? amount : 50,
+//   n_samples = 48000,
+//   curve = new Float32Array(n_samples),
+//   deg = Math.PI / 180,
+//   i = 0,
+//   x;
+//   for ( ; i < n_samples; ++i ) {
+//     x = i * 2 / n_samples - 1;
+//     curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
+//   }
+//   return curve;
+// };
 
 
 function playSample(audioContext, audioBuffer, instrNode, time) {
   const sampleSource = audioContext.createBufferSource();
   sampleSource.buffer = audioBuffer;
   sampleSource.connect(instrNode);
-  // distortion.connect(instrNode);
-  // distGain.connect(instrNode);
-  instrNode.connect(masterGain)
-  masterGain.connect(audioContext.destination)
+  instrNode.connect(masterGain);
+  masterGain.connect(audioContext.destination);
   sampleSource.start(time);
   return sampleSource;
 }
@@ -132,11 +128,7 @@ const scheduler = () => {
 class App extends Component {
 
   state = {
-    'Clap': {},
-    'Hat': {},
-    'Cymbal': {},
-    'Hi Tom': {},
-    'Kick': {},
+    distortion: false,
   }
 
   async componentDidMount(){
@@ -151,16 +143,15 @@ class App extends Component {
       gainNodes = setupGainNodes(filenames);
       console.log('loaded gain nodes');
       console.log(gainNodes);
-      // this.setState({ gain: 90 });
     })
-    .then(() => {
-      distortion = context.createWaveShaper();
-      distortion.curve = makeDistortionCurve(0);
-      distortion.oversample = '4x';
-      distGain = context.createGain();
-      console.log('loaded distortion & dist gain');
-      console.log(distortion, distGain);  
-    })    
+    // .then(() => {
+    //   distortion = context.createWaveShaper();
+    //   distortion.curve = makeDistortionCurve(0);
+    //   distortion.oversample = '4x';
+    //   distGain = context.createGain();
+    //   console.log('loaded distortion & dist gain');
+    //   console.log(distortion, distGain);  
+    // })    
     .then(() => {
       masterGain = context.createGain();
       console.log('loaded master gain');
@@ -193,6 +184,10 @@ class App extends Component {
     console.log('updating', instr, 'with', newSequence);
   }
 
+  clearLoop = (instr) => {
+    loop[instr] = [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ];
+  }
+
   updateGain = (instr, value) => {
     if (gainNodes) { 
       gainNodes[instr].gain.value = value/100 
@@ -207,14 +202,7 @@ class App extends Component {
 
   distortionToggle = (value) => {
     console.log('hello')
-    if (value) {
-      distortion.curve = makeDistortionCurve(20)
-      distGain.gain.value = 0.5;
-    } else {
-      distortion.curve = makeDistortionCurve(0)
-      distGain.gain.value = 0.9;
-    }
-    console.log(distGain.gain)
+    this.setState({ distortion: !this.state.distortion })
   }
 
   updateTempo = (newTempo) => {
@@ -222,6 +210,8 @@ class App extends Component {
   }
 
   render() {
+
+    console.log(this.state)
 
     return (
       <div className={styles.app}>
@@ -241,15 +231,14 @@ class App extends Component {
           </article>
 
           <article className={styles.sequencer}>
-            <ProgramSteps title={'Clap'} updateLoop={this.updateLoop} />
-            <ProgramSteps title={'Hat'} updateLoop={this.updateLoop} />
-            <ProgramSteps title={'Open Hat'} updateLoop={this.updateLoop} />
-            <ProgramSteps title={'Cymbal'} updateLoop={this.updateLoop} />
-            <ProgramSteps title={'Hi Tom'} updateLoop={this.updateLoop} />
-            <ProgramSteps title={'Lo Tom'} updateLoop={this.updateLoop} />
-            <ProgramSteps title={'Kick'} updateLoop={this.updateLoop} />
+            <ProgramSteps title={'Clap'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Clap']}/>
+            <ProgramSteps title={'Hat'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Hat']}/>
+            <ProgramSteps title={'Open Hat'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Open Hat']}/>
+            <ProgramSteps title={'Cymbal'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Cymbal']}/>
+            <ProgramSteps title={'Hi Tom'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Hi Tom']}/>
+            <ProgramSteps title={'Lo Tom'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Lo Tom']}/>
+            <ProgramSteps title={'Kick'} updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={loop['Kick']}/>
           </article>
-
 
           <Hosting />
       </div>

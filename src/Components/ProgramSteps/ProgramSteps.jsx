@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
 import Step from './Step';
 import styles from './ProgramSteps.module.scss';
+import Button from '../Button';
 
 class ProgramSteps extends Component {
-
-  state = {
-  }
-
-  componentDidMount() {
-  }
 
   renderSteps = (num) => {
     let output = [];
     for (let i=0; i<num; i++) {
-      output.push(<Step step={i} key={i} logic={this.updateLoop} group={(i+1)%4===0 ? true : false} />)
+      output.push(<Step step={i} key={i} logic={this.updateLoop} loop={this.props.loop} group={(i+1)%4===0 ? true : false} />)
     }
     return output;
   }
@@ -25,7 +20,7 @@ class ProgramSteps extends Component {
 
   render() { 
 
-    const steps =  this.renderSteps(16)
+    let steps =  this.renderSteps(16)
 
     return (
       <article className={styles.instrument}>
@@ -33,6 +28,7 @@ class ProgramSteps extends Component {
         <section>
           {steps}
         </section>
+        <Button text="Clear" logic={() => {this.props.clearLoop(this.props.title)}} />
       </article>
      );
   }
