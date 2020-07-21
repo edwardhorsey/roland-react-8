@@ -1,41 +1,24 @@
 import React, { Component } from 'react';
 import styles from './App.module.scss';
 import ProgramSteps from "./Components/ProgramSteps";
-import Button from "./Components/Button";
 import InstrumentControls from "./Components/InstrumentControls";
+import SampleControls from './Components/SampleControls';
 import Hosting from "./Components/Hosting";
 
 import { filenames } from "./data/filenames";
-import SampleControls from './Components/SampleControls';
+import setupSample from "./engine/load-samples/load-samples";
+
 
 let context; // the Audio Context
 let bufferLoader; // our loaded samples will live here
 let masterGain; // whole drum machine
 let gainNodes; // our gain nodes will live here
-let distortion; // variable for storing distortion
-let distGain;
 // let pitchNodes; // our pitch effects will live here
 let lookahead = 25.0; // How frequently to call scheduling function (in milliseconds)
 let scheduleAheadTime = 0.250; // How far ahead to schedule audio (sec)
 let timerID;
 let unlocked = false;
 
-
-async function getFile(audioContext, filepath) {
-  const response = await fetch(filepath);
-  const arrayBuffer = await response.arrayBuffer();
-  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-  return audioBuffer;
-}
-
-async function setupSample(files) {
-    let obj = {};
-    for (let prop in files) {
-      const sample = await getFile(context, files[prop])
-      obj[prop] = sample
-    }
-  return obj;
-}
 
 function setupGainNodes(files) {
   let obj = {};
@@ -133,7 +116,7 @@ class App extends Component {
 
   async componentDidMount(){
     context = new AudioContext();
-    await setupSample(filenames)
+    await setupSample(context, filenames)
     .then(buffers => {
       bufferLoader = buffers;
       console.log('loaded sounds');
@@ -144,14 +127,6 @@ class App extends Component {
       console.log('loaded gain nodes');
       console.log(gainNodes);
     })
-    // .then(() => {
-    //   distortion = context.createWaveShaper();
-    //   distortion.curve = makeDistortionCurve(0);
-    //   distortion.oversample = '4x';
-    //   distGain = context.createGain();
-    //   console.log('loaded distortion & dist gain');
-    //   console.log(distortion, distGain);  
-    // })    
     .then(() => {
       masterGain = context.createGain();
       console.log('loaded master gain');
@@ -216,9 +191,7 @@ class App extends Component {
     return (
       <div className={styles.app}>
           <p>Roland-React-8</p>
-          <Button text={'Start'} logic={this.start} />
-          <Button text={'Stop'} logic={this.stop} />
-          <InstrumentControls tempo={tempo} updateTempo={this.updateTempo} updateGain={this.updateMaster} distToggle={this.distortionToggle} />
+          <InstrumentControls tempo={tempo} updateTempo={this.updateTempo} updateGain={this.updateMaster} distToggle={this.distortionToggle} start={this.start} stop={this.stop} />
 
           <article className={styles.sampleControls}>
             <SampleControls title={'Clap'} updateGain={this.updateGain} />
@@ -241,6 +214,7 @@ class App extends Component {
           </article>
 
           <Hosting />
+
       </div>
     );
   }

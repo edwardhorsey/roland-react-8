@@ -29,6 +29,8 @@ class InstrumentControls extends Component {
       <section className={styles.instrControls}>
         <h3>Instrument Controls</h3>
         <section clasName={styles.instrKnobs}>
+          <Button text={'Start'} logic={this.props.start} />
+          <Button text={'Stop'} logic={this.props.stop} />
           <Donut
             diameter={130}
             min={30}
