@@ -14,14 +14,13 @@ let context; // the Audio Context
 let bufferLoader; // our loaded samples will live here
 let masterGain; // whole drum machine
 let gainNodes; // our gain nodes will live here
-// let pitchNodes; // our pitch effects will live here
 let lookahead = 25.0; // How frequently to call scheduling function (in milliseconds)
 let scheduleAheadTime = 0.250; // How far ahead to schedule audio (sec)
 let timerID;
 let unlocked = false;
 
 
-function setupGainNodes(files) {
+function setupGainNodes(context, files) {
   let obj = {};
   for (let prop in files) {
     const gain = context.createGain();
@@ -29,20 +28,6 @@ function setupGainNodes(files) {
   }
   return obj;
 }
-
-// function makeDistortionCurve(amount) {
-//   var k = typeof amount === 'number' ? amount : 50,
-//   n_samples = 48000,
-//   curve = new Float32Array(n_samples),
-//   deg = Math.PI / 180,
-//   i = 0,
-//   x;
-//   for ( ; i < n_samples; ++i ) {
-//     x = i * 2 / n_samples - 1;
-//     curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) );
-//   }
-//   return curve;
-// };
 
 
 function playSample(audioContext, audioBuffer, instrNode, time) {
@@ -124,7 +109,7 @@ class App extends Component {
       console.log(bufferLoader);
     })
     .then(() => {
-      gainNodes = setupGainNodes(filenames);
+      gainNodes = setupGainNodes(context, filenames);
       console.log('loaded gain nodes');
       console.log(gainNodes);
     })
