@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styles from './SampleControls.module.scss';
 import { Donut } from 'react-dial-knob';
-import Button from '../Button';
+import MuteButton from '../MuteButton';
 
 
 class SampleControls extends Component {
@@ -17,6 +17,7 @@ class SampleControls extends Component {
   }
 
   mute = () => {
+    console.log('hi')
     if (!this.state.mute) {
       this.props.updateGain(this.props.title, 0);
     } else {
@@ -59,7 +60,7 @@ class SampleControls extends Component {
           >
           <label id={this.props.title}>Decay</label>
         </Donut>
-        <Button text="Mute" logic={this.mute} />
+        <MuteButton text="Mute" logic={this.mute} muted={this.state.mute} />
         <h2>{this.props.title}</h2>
       </article>
      );

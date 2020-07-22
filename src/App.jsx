@@ -3,7 +3,6 @@ import styles from './App.module.scss';
 import Hosting from "./Components/Hosting";
 
 import { AudioProvider } from "./context/audioEngine.js";
-
 import { filenames } from "./data/filenames";
 import { setupSample, setupGainNodes } from "./engine/load-samples/load-samples";
 import MachineSequencer from './Containers/MachineSequencer';
@@ -90,7 +89,6 @@ class App extends Component {
   }
   
   scheduler = () => {
-    
     // while there are notes that will need to play before the next interval, schedule them and advance the pointer.
     while (this.nextNoteTime < this.state.context.currentTime + this.scheduleAheadTime ) { 
       this.scheduleNote(this.current16thNote, this.nextNoteTime);
@@ -112,8 +110,6 @@ class App extends Component {
     this.nextNoteTime = this.state.context.currentTime; // Important: takes time from when you start scheduling the sequencing
     this.scheduler();
   }
-  
-  doobie = 45
   
   stop = () => {
     window.clearTimeout(this.timerID);
