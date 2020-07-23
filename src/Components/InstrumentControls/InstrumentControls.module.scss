@@ -1,6 +1,10 @@
 .instrControls {
   display: flex;
   flex-direction: column;
+  background-color: rgb(219, 214, 214);
+  border-radius: 8px;
+  margin: 20px;
+  padding: 20px;
 
   section {
       display: flex;
