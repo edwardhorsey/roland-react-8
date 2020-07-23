@@ -1,7 +1,5 @@
 .muteButtonOff {
-  padding: 5px;
-  width: 80px;
-  height: 30px;
+  padding: 10px;
   background-color: rgb(92, 185, 142);
   &:hover { 
     background-color: rgb(66, 129, 99);
@@ -9,9 +7,7 @@
 }
 
 .muteButtonOn {
-  padding: 5px;
-  width: 80px;
-  height: 30px;
+  padding: 10px;
   background-color: rgb(231, 122, 122);
   &:hover { 
     background-color: rgb(179, 107, 107);

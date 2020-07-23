@@ -60,8 +60,7 @@ class SampleControls extends Component {
           >
           <label id={this.props.title}>Decay</label>
         </Donut>
-        <MuteButton text="Mute" logic={this.mute} muted={this.state.mute} />
-        <h2>{this.props.title}</h2>
+        <MuteButton text={this.props.title} logic={this.mute} muted={this.state.mute} />
       </article>
      );
   }

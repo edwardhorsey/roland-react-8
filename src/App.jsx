@@ -127,7 +127,13 @@ class App extends Component {
     newSequence[instr] = [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ];
     this.setState({ loop: newSequence });
   }
-
+  
+  fillLoop = (instr) => {
+    let newSequence = this.state.loop;
+    newSequence[instr] = [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ];
+    this.setState({ loop: newSequence });
+  }
+  
   updateGain = (instr, value) => {
     if (this.gainNodes) { 
       this.gainNodes[instr].gain.value = value/100;
@@ -153,7 +159,7 @@ class App extends Component {
         <div className={styles.app}>
           <p>Roland-React-8</p>
           <MachineKnobs updateTempo={this.updateTempo} updateMaster={this.updateMaster} start={this.start} stop={this.stop} updateGain={this.updateGain} />
-          <MachineSequencer updateLoop={this.updateLoop} clearLoop={this.clearLoop} loop={this.state.loop} />
+          <MachineSequencer updateLoop={this.updateLoop} clearLoop={this.clearLoop} fillLoop={this.fillLoop} loop={this.state.loop} />
           <Hosting />
         </div>
       </AudioProvider>

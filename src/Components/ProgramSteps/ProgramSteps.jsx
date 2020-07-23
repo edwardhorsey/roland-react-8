@@ -29,6 +29,8 @@ class ProgramSteps extends Component {
           {steps}
         </section>
         <Button text="Clear" logic={() => {this.props.clearLoop(this.props.title)}} />
+        <Button text="Fill" logic={() => {this.props.fillLoop(this.props.title)}} />
+
       </article>
      );
   }
