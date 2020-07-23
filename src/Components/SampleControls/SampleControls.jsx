@@ -13,11 +13,10 @@ class SampleControls extends Component {
 
   valueChange = gain => {
     this.setState({ gain: gain })
-    this.props.updateGain(this.props.title, gain)
+    this.props.updateGain(this.props.title, this.state.mute ? 0 : gain)
   }
 
   mute = () => {
-    console.log('hi')
     if (!this.state.mute) {
       this.props.updateGain(this.props.title, 0);
     } else {
@@ -45,7 +44,7 @@ class SampleControls extends Component {
           >
           <label id={this.props.title}>Gain</label>
         </Donut>
-        <Donut
+        {/* <Donut
           diameter={110}
           min={0}
           max={100}
@@ -59,7 +58,7 @@ class SampleControls extends Component {
           ariaLabelledBy={this.props.title}
           >
           <label id={this.props.title}>Decay</label>
-        </Donut>
+        </Donut> */}
         <MuteButton text={this.props.title} logic={this.mute} muted={this.state.mute} />
       </article>
      );

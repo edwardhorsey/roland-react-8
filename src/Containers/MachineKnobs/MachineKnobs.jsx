@@ -14,6 +14,8 @@ class MachineKnobs extends Component {
       start,
       stop,
       updateGain,
+      distortionOn,
+      distorted
     } = this.props
 
     console.log(this.props)
@@ -21,7 +23,14 @@ class MachineKnobs extends Component {
   return (
     <section className={styles.topSection}>
       <article className={styles.instrControls}>
-        <InstrumentControls updateTempo={updateTempo} updateMaster={updateMaster} start={start} stop={stop} />
+        <InstrumentControls
+          updateTempo={updateTempo}
+          updateMaster={updateMaster}
+          start={start}
+          stop={stop}
+          distortionOn={distortionOn}
+          distorted={distorted}
+        />
       </article>
       <article className={styles.sampleControls}>
         <SampleControls title={'Clap'} updateGain={updateGain} />

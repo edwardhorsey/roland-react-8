@@ -4,7 +4,8 @@ import Hosting from "./Components/Hosting";
 
 import { AudioProvider } from "./context/audioEngine.js";
 import { filenames } from "./data/filenames";
-import { setupSample, setupGainNodes } from "./engine/load-samples/load-samples";
+import { setupSample, setupGainNodes,  } from "./engine/load-samples/load-samples";
+import makeDistortionCurve from "./engine/distortion/distortion"
 import MachineSequencer from './Containers/MachineSequencer';
 import MachineKnobs from './Containers/MachineKnobs';
 
@@ -13,7 +14,7 @@ class App extends Component {
   state = {
     context: {}, // audio context
     bufferLoader: {}, // samples
-    distortion: false,
+    distortionOn: false,
     loop: {
       'Clap': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,1 ],
       'Hat': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
@@ -27,6 +28,7 @@ class App extends Component {
   
   gainNodes = ''
   masterGain = ''
+  mainOut = ''
   lookahead = 25.0
   scheduleAheadTime = 0.250
   timerID = ''
@@ -43,12 +45,22 @@ class App extends Component {
       console.log('context and sounds loaded and stored on state');
     })
     .then(() => {
-      this.gainNodes = setupGainNodes(this.state.context, filenames);       
+      this.gainNodes = setupGainNodes(this.state.context, filenames);
+      this.mainDryOut = this.state.context.createGain();
       console.log('loaded gain nodes');
     })
     .then(() => {
       this.masterGain = this.state.context.createGain();
       console.log('loaded master gain');
+    })
+    .then(() => {
+      this.distortion = this.state.context.createWaveShaper();
+      this.distortionGain = this.state.context.createGain();
+      this.distortionGain.gain.value = 0.5;
+      this.distortionOut = this.state.context.createGain();
+      this.distortionOut.gain.value = 0.8;
+      this.distortion.curve = makeDistortionCurve(30, 48000);
+      this.distortion.oversample = 'x4';
     })
     .catch(err => console.log(err))
   }
@@ -60,12 +72,28 @@ class App extends Component {
     if (this.current16thNote === 16) this.current16thNote = 0;
   };
   
-  playSample(audioContext, audioBuffer, instrNode, masterGain, time) {
-    const sampleSource = audioContext.createBufferSource();
+  runThroughDistortion(input) {
+    input.connect(this.distortionGain)
+    this.distortionGain.connect(this.distortion)
+    return this.distortion;
+  }
+  
+
+  playSample(audioBuffer, instrNode, time) {
+    const sampleSource = this.state.context.createBufferSource();
     sampleSource.buffer = audioBuffer;
     sampleSource.connect(instrNode);
-    instrNode.connect(masterGain);
-    masterGain.connect(audioContext.destination);
+    instrNode.connect(this.mainDryOut);
+    
+    if (this.state.distortionOn) {
+      instrNode.connect(this.distortionGain);
+      this.distortionGain.connect(this.distortion);
+      this.distortion.connect(this.distortionOut);
+      this.distortionOut.connect(this.masterGain);
+    }
+    
+    this.mainDryOut.connect(this.masterGain);
+    this.masterGain.connect(this.state.context.destination);
     sampleSource.start(time);
     return sampleSource;
   }
@@ -78,13 +106,13 @@ class App extends Component {
     
     console.log(this.current16thNote, beatNumber);  
     
-    if (this.state.loop['Clap'][this.current16thNote]) this.playSample(this.state.context, this.state.bufferLoader['Clap'], this.gainNodes['Clap'], this.masterGain, time);
-    if (this.state.loop['Hat'][this.current16thNote]) this.playSample(this.state.context, this.state.bufferLoader['Hat'], this.gainNodes['Hat'], this.masterGain, time);
-    if (this.state.loop['Open Hat'][this.current16thNote]) this.playSample(this.state.context, this.state.bufferLoader['Open Hat'], this.gainNodes['Open Hat'], this.masterGain, time);
-    if (this.state.loop['Cymbal'][this.current16thNote]) this.playSample(this.state.context, this.state.bufferLoader['Cymbal'], this.gainNodes['Cymbal'], this.masterGain, time);
-    if (this.state.loop['Hi Tom'][this.current16thNote]) this.playSample(this.state.context, this.state.bufferLoader['Hi Tom'], this.gainNodes['Hi Tom'], this.masterGain, time);
-    if (this.state.loop['Lo Tom'][this.current16thNote]) this.playSample(this.state.context, this.state.bufferLoader['Lo Tom'], this.gainNodes['Lo Tom'], this.masterGain, time);
-    if (this.state.loop['Kick'][this.current16thNote]) this.playSample(this.state.context, this.state.bufferLoader['Kick'], this.gainNodes['Kick'], this.masterGain, time);
+    if (this.state.loop['Clap'][this.current16thNote]) this.playSample(this.state.bufferLoader['Clap'], this.gainNodes['Clap'], time);
+    if (this.state.loop['Hat'][this.current16thNote]) this.playSample(this.state.bufferLoader['Hat'], this.gainNodes['Hat'], time);
+    if (this.state.loop['Open Hat'][this.current16thNote]) this.playSample(this.state.bufferLoader['Open Hat'], this.gainNodes['Open Hat'], time);
+    if (this.state.loop['Cymbal'][this.current16thNote]) this.playSample(this.state.bufferLoader['Cymbal'], this.gainNodes['Cymbal'], time);
+    if (this.state.loop['Hi Tom'][this.current16thNote]) this.playSample(this.state.bufferLoader['Hi Tom'], this.gainNodes['Hi Tom'], time);
+    if (this.state.loop['Lo Tom'][this.current16thNote]) this.playSample(this.state.bufferLoader['Lo Tom'], this.gainNodes['Lo Tom'], time);
+    if (this.state.loop['Kick'][this.current16thNote]) this.playSample(this.state.bufferLoader['Kick'], this.gainNodes['Kick'], time);
     
   }
   
@@ -115,6 +143,17 @@ class App extends Component {
     window.clearTimeout(this.timerID);
   }
   
+  distortionOn = () => {
+    if (!this.state.distortionOn) {
+      this.distortionOut.gain.value = 0.8;
+      this.mainDryOut.gain.value = 0;
+    } else {
+      this.distortionOut.gain.value = 0;
+      this.mainDryOut.gain.value = 1;
+    }
+    this.setState({ distortionOn: !this.state.distortionOn });
+  }
+
   updateLoop = (num, state, instr) => {
     let newSequence = this.state.loop;
     newSequence[instr][Number(num)] = state ? 1 : 0;
@@ -158,8 +197,21 @@ class App extends Component {
       <AudioProvider>
         <div className={styles.app}>
           <p>Roland-React-8</p>
-          <MachineKnobs updateTempo={this.updateTempo} updateMaster={this.updateMaster} start={this.start} stop={this.stop} updateGain={this.updateGain} />
-          <MachineSequencer updateLoop={this.updateLoop} clearLoop={this.clearLoop} fillLoop={this.fillLoop} loop={this.state.loop} />
+          <MachineKnobs
+            updateTempo={this.updateTempo}
+            updateMaster={this.updateMaster}
+            start={this.start}
+            stop={this.stop}
+            updateGain={this.updateGain}
+            distortionOn={this.distortionOn}
+            distorted={this.state.distortionOn}
+          />
+          <MachineSequencer
+            updateLoop={this.updateLoop}
+            clearLoop={this.clearLoop}
+            fillLoop={this.fillLoop}
+            loop={this.state.loop}
+          />
           <Hosting />
         </div>
       </AudioProvider>

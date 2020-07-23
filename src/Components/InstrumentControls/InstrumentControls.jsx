@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styles from './InstrumentControls.module.scss';
 import { Donut } from 'react-dial-knob'
 import Button from '../Button';
+import FXButton from '../FXButton';
 
 
 class InstrumentControls extends Component {
@@ -59,8 +60,11 @@ class InstrumentControls extends Component {
           >
             <label id={'my-label'}>Master Gain</label>
           </Donut>
+          <FXButton text={'DISTORTION'} logic={this.props.distortionOn} dist={this.props.distorted} />
         </section>
-
+        <div className={styles.aboutMe}>
+          <p>Made by Edward Horsey</p>
+        </div>
       </section>
      );
   }
