@@ -17,12 +17,12 @@ class App extends Component {
     distortionOn: false,
     loop: {
       'Clap': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,1 ],
-      'Hat': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
-      'Open Hat': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
+      'Hat': [ 0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,0,  ], // [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
+      'Open Hat': [ 0,0,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ],
       'Cymbal': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,1,0,1, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ],
-      'Hi Tom': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
-      'Lo Tom': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
-      'Kick': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ], // [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
+      'Hi Tom': [ 0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
+      'Lo Tom': [ 0,0,0,0, 0,0,0,0, 0,1,0,1, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
+      'Kick': [ 1,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,1,0 ], // [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
     }
   }
   
@@ -56,11 +56,11 @@ class App extends Component {
     .then(() => {
       this.distortion = this.state.context.createWaveShaper();
       this.distortionGain = this.state.context.createGain();
-      this.distortionGain.gain.value = 0.5;
+      this.distortionGain.gain.value = 0.3;
       this.distortionOut = this.state.context.createGain();
-      this.distortionOut.gain.value = 0.8;
-      this.distortion.curve = makeDistortionCurve(30, 48000);
-      this.distortion.oversample = 'x4';
+      this.distortionOut.gain.value = 0.7;
+      this.distortion.curve = makeDistortionCurve(25, 48000);
+      this.distortion.oversample = '2x';
     })
     .catch(err => console.log(err))
   }
@@ -145,7 +145,7 @@ class App extends Component {
   
   distortionOn = () => {
     if (!this.state.distortionOn) {
-      this.distortionOut.gain.value = 0.8;
+      this.distortionOut.gain.value = 0.7;
       this.mainDryOut.gain.value = 0;
     } else {
       this.distortionOut.gain.value = 0;

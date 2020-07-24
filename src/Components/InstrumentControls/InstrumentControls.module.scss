@@ -14,7 +14,9 @@
   }
   div {
     p {
-      font-style: italic;
+      &.italics {
+        font-style: italic;
+      }
     }
   }
 }

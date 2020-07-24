@@ -7,7 +7,7 @@ import MuteButton from '../MuteButton';
 class SampleControls extends Component {
 
   state = {
-    gain: 80,
+    gain: 70,
     mute: false,
   }
 

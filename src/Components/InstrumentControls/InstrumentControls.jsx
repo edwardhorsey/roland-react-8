@@ -63,7 +63,8 @@ class InstrumentControls extends Component {
           <FXButton text={'DISTORTION'} logic={this.props.distortionOn} dist={this.props.distorted} />
         </section>
         <div className={styles.aboutMe}>
-          <p>Made by Edward Horsey</p>
+          <p> <span role="img" aria-label="WIP">🚧</span> Work In Progress <span role="img" aria-label="WIP">🚧</span> </p>
+          <p className={styles.italics}>made by Edward Horsey</p>
         </div>
       </section>
      );
