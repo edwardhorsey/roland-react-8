@@ -3,12 +3,15 @@ import styles from './SampleControls.module.scss';
 import { Donut } from 'react-dial-knob';
 import MuteButton from '../MuteButton';
 
-
 class SampleControls extends Component {
 
   state = {
     gain: 70,
     mute: false,
+  }
+
+  componentDidMount() {
+    this.props.updateGain(this.props.title, this.state.gain)
   }
 
   valueChange = gain => {

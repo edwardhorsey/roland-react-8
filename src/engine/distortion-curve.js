@@ -1,4 +1,4 @@
-export default function makeDistortionCurve(amount, sampleRate) {
+export const makeDistortionCurve = (amount, sampleRate) => {
   var k = amount,
       n_samples = typeof sampleRate === 'number' ? sampleRate : 44100,
       curve = new Float32Array(n_samples),
