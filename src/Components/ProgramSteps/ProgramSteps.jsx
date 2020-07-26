@@ -6,7 +6,6 @@ import Button from '../Button';
 class ProgramSteps extends Component {
   constructor(props) {
     super(props);
-    this.titleRef = React.createRef();
     this.stepRefs = (()=>{
       let array=[];
       for (let i=0;i<16;i++) {
@@ -18,15 +17,6 @@ class ProgramSteps extends Component {
 
   componentDidMount() {
     this.props.storeStepRefs(this.props.title, this.stepRefs)
-  }
-
-  handleClick = () => {
-    const myTitle = this.titleRef.current;
-    myTitle.style.color = 'blue';
-    this.props.messingWithARef(this.stepRefs);
-    // const randomStep = this.stepRefs[4].current;
-    // randomStep.style.backgroundColor = 'green';
-    // console.log(myTitle)
   }
 
   allTheRefs=[]
@@ -54,7 +44,7 @@ class ProgramSteps extends Component {
 
     return (
       <article className={styles.instrument}>
-        <h2 onClick={()=>{this.handleClick()}} ref={this.titleRef}>{this.props.title}</h2>
+        <h2>{this.props.title}</h2>
         <section>
           {steps}
         </section>
