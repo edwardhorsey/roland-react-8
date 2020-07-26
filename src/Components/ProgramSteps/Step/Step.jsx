@@ -15,14 +15,12 @@ class Step extends Component {
 
   render() {
     const stepStyle = this.props.loop[this.props.step] ? styles.on : styles.off;
-    const currentStepStyle = this.props.currentSixteenth === this.props.step ? styles.current : '';
-    console.log(currentStepStyle)
 
     return (
     <div className={stepStyle} onClick={this.sendToLoop} name={this.props.step}>
-      <div className={currentStepStyle} ></div>
+      <div ref={this.props.forwardRef} className={styles.inner} ></div>
     </div >);
   }
 }
  
-export default Step;
+export default React.forwardRef((props, ref) => <Step {...props} forwardRef={ref} />)

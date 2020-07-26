@@ -6,6 +6,11 @@
   &:hover {
     background-color: rgb(122, 94, 94);
   }
+  box-sizing: border-box;
+  .inner {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .off {
@@ -16,12 +21,9 @@
   &:hover {
     background-color: rgb(78, 72, 72);
   }
-}
-
-.current{
-  height: 40px;
-  width: 40px;
-  // border-left: 2px solid white;
-  // border-right: 2px solid white;
-  background-color: rgba(192, 187, 187, 0.315);
+  box-sizing: border-box;
+  .inner {
+    width: 40px;
+    height: 40px;
+  }
 }

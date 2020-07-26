@@ -7,19 +7,36 @@ class ProgramSteps extends Component {
   constructor(props) {
     super(props);
     this.titleRef = React.createRef();
+    this.stepRefs = (()=>{
+      let array=[];
+      for (let i=0;i<16;i++) {
+        array.push(React.createRef())
+      }
+      return array;
+    })()
+  }
+
+  componentDidMount() {
+    this.props.storeStepRefs(this.props.title, this.stepRefs)
   }
 
   handleClick = () => {
     const myTitle = this.titleRef.current;
-    this.setState({anything: !this.state.anything})
-    myTitle.classList.toggle('slide-in-right')
+    myTitle.style.color = 'blue';
+    this.props.messingWithARef(this.stepRefs);
+    // const randomStep = this.stepRefs[4].current;
+    // randomStep.style.backgroundColor = 'green';
+    // console.log(myTitle)
   }
+
+  allTheRefs=[]
 
   renderSteps = (num) => {
     let output = [];
     for (let i=0; i<num; i++) {
-      output.push(<Step step={i} key={i} currentSixteenth={this.props.currentSixteenth} logic={this.updateLoop} loop={this.props.loop} group={(i+1)%4===0 ? true : false} />)
+      output.push(<Step ref={this.stepRefs[i]} handleClick={this.handleClick} step={i} key={i} currentSixteenth={this.props.currentSixteenth} logic={this.updateLoop} loop={this.props.loop} group={(i+1)%4===0 ? true : false} />)
     }
+
     return output;
   }
 
@@ -30,10 +47,14 @@ class ProgramSteps extends Component {
 
   render() { 
     let steps =  this.renderSteps(16)
+    console.log(this.stepRefs);
+
+    // const randomStep = this.stepRefs[4].current;
+    // randomStep.classList.toggle('on')
 
     return (
       <article className={styles.instrument}>
-        <h2 ref={this.titleRef}>{this.props.title}</h2>
+        <h2 onClick={()=>{this.handleClick()}} ref={this.titleRef}>{this.props.title}</h2>
         <section>
           {steps}
         </section>
