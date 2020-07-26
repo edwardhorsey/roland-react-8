@@ -122,28 +122,25 @@ class App extends Component {
 
     while (this.notesInQueue.length && this.notesInQueue[0].time < currentTime) {
         drawNote = this.notesInQueue[0].note;
-        this.notesInQueue.splice(0,1);   // remove note from queue
+        this.notesInQueue.splice(0,1);
     }
-    
-    // We only need to draw if the note has moved.
     if (this.lastNoteDrawn !== drawNote) {
-      this.stepRefs['Clap'][this.lastNoteDrawn].current.style.border = ''; 
-      this.stepRefs['Clap'][drawNote].current.style.border = '1px solid rgba(255, 255, 255, 1)';
-      this.stepRefs['Hat'][this.lastNoteDrawn].current.style.border = ''; 
-      this.stepRefs['Hat'][drawNote].current.style.border = '1px solid rgba(255, 255, 255, 1)';
-      this.stepRefs['Open Hat'][this.lastNoteDrawn].current.style.border = ''; 
-      this.stepRefs['Open Hat'][drawNote].current.style.border = '1px solid rgba(255, 255, 255, 1)';
-      this.stepRefs['Cymbal'][this.lastNoteDrawn].current.style.border = ''; 
-      this.stepRefs['Cymbal'][drawNote].current.style.border = '1px solid rgba(255, 255, 255, 1)';
-      this.stepRefs['Hi Tom'][this.lastNoteDrawn].current.style.border = '';  
-      this.stepRefs['Hi Tom'][drawNote].current.style.border = '1px solid rgba(255, 255, 255, 1)';
-      this.stepRefs['Lo Tom'][this.lastNoteDrawn].current.style.border = ''; 
-      this.stepRefs['Lo Tom'][drawNote].current.style.border = '1px solid rgba(255, 255, 255, 1)';
-      this.stepRefs['Kick'][this.lastNoteDrawn].current.style.border = ''; 
-      this.stepRefs['Kick'][drawNote].current.style.border = '1px solid rgba(255, 255, 255, 1)';
+      this.stepRefs['Clap'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Clap'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Hat'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Hat'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Open Hat'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Open Hat'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Cymbal'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Cymbal'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Hi Tom'][this.lastNoteDrawn].current.style.backgroundColor = '';  
+      this.stepRefs['Hi Tom'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Lo Tom'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Lo Tom'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Kick'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Kick'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
       this.lastNoteDrawn = drawNote;
     }
-    // set up to draw again
     requestAnimationFrame(this.draw);
 }
   
@@ -158,7 +155,6 @@ class App extends Component {
   
   start = () => {
     if (!this.unlocked) {
-      // play silent buffer to unlock the audio
       console.log(this.unlocked, this.state.context)
       var buffer = this.state.context.createBuffer(1, 1, 22050);
       var node = this.state.context.createBufferSource();
