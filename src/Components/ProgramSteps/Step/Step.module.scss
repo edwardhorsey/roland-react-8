@@ -1,23 +1,29 @@
 .on {
   width: 40px;
   height: 40px;
-  padding: 5px;
   margin: 5px;
   background-color: rgb(197, 90, 90);
   &:hover {
     background-color: rgb(122, 94, 94);
   }
-
+  box-sizing: border-box;
+  .inner {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .off {
   width: 40px;
   height: 40px;
-  padding: 5px;
   margin: 5px;
   background-color: rgb(97, 97, 97);
   &:hover {
     background-color: rgb(78, 72, 72);
   }
-
+  box-sizing: border-box;
+  .inner {
+    width: 40px;
+    height: 40px;
+  }
 }

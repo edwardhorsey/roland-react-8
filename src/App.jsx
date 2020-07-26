@@ -36,12 +36,16 @@ class App extends Component {
       'Hi Tom': [ 0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
       'Lo Tom': [ 0,0,0,0, 0,0,0,0, 0,1,0,1, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
       'Kick': [ 1,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,1,0 ], // [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
-    }
+    },
+    currentSixteenth: '',
   }
   
   gainNodes = ''
   masterGain = ''
   mainOut = ''
+  stepRefs = {}
+  notesInQueue = []
+  lastNoteDrawn = 0
   lookahead = 25.0
   scheduleAheadTime = 0.250
   timerID = ''
@@ -102,17 +106,43 @@ class App extends Component {
   
   scheduleNote = (beatNumber, time) => {
     const { loop, bufferLoader } = this.state
-
-    // const notesInQueue = [];  
-    // console.log(time);
-    // notesInQueue.push({  note: beatNumber, time: time  });
     
-    console.log(this.current16thNote, beatNumber);  
+    this.notesInQueue.push({  note: beatNumber, time: time  });
+    
+    console.log(this.current16thNote, beatNumber, this.notesInQueue);  
     
     for (let prop in loop) {
       if (loop[prop][this.current16thNote]) this.playSample(bufferLoader[prop], this.gainNodes[prop], time);
     }
   }
+
+  draw = () => {
+    let drawNote = this.lastNoteDrawn;
+    let currentTime = this.state.context.currentTime;
+
+    while (this.notesInQueue.length && this.notesInQueue[0].time < currentTime) {
+        drawNote = this.notesInQueue[0].note;
+        this.notesInQueue.splice(0,1);
+    }
+    if (this.lastNoteDrawn !== drawNote) {
+      this.stepRefs['Clap'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Clap'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Hat'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Hat'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Open Hat'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Open Hat'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Cymbal'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Cymbal'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Hi Tom'][this.lastNoteDrawn].current.style.backgroundColor = '';  
+      this.stepRefs['Hi Tom'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Lo Tom'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Lo Tom'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.stepRefs['Kick'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+      this.stepRefs['Kick'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      this.lastNoteDrawn = drawNote;
+    }
+    requestAnimationFrame(this.draw);
+}
   
   scheduler = () => {
     // while there are notes that will need to play before the next interval, schedule them and advance the pointer.
@@ -125,7 +155,6 @@ class App extends Component {
   
   start = () => {
     if (!this.unlocked) {
-      // play silent buffer to unlock the audio
       console.log(this.unlocked, this.state.context)
       var buffer = this.state.context.createBuffer(1, 1, 22050);
       var node = this.state.context.createBufferSource();
@@ -135,12 +164,14 @@ class App extends Component {
     }
     this.nextNoteTime = this.state.context.currentTime; // Important: takes time from when you start scheduling the sequencing
     this.scheduler();
+    requestAnimationFrame(this.draw);
   }
   
   stop = () => {
+    this.setState({currentSixteenth: null})
     window.clearTimeout(this.timerID);
   }
-  
+
   distortionOn = () => {
     if (!this.state.distortionOn) {
       this.distortionOut.gain.value = 0.7;
@@ -189,6 +220,11 @@ class App extends Component {
     this.tempo = newTempo;
   }
 
+  storeStepRefs = (title, array) => {
+    this.stepRefs[title] = array;
+    console.log(this.stepRefs);
+  }
+
   render() {
 
     console.log(this.state)
@@ -207,10 +243,12 @@ class App extends Component {
             distorted={this.state.distortionOn}
           />
           <MachineSequencer
+            currentSixteenth={this.state.currentSixteenth}
             updateLoop={this.updateLoop}
             clearLoop={this.clearLoop}
             fillLoop={this.fillLoop}
             loop={this.state.loop}
+            storeStepRefs={this.storeStepRefs}
           />
           <Hosting />
         </div>

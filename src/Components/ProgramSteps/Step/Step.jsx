@@ -14,12 +14,13 @@ class Step extends Component {
   }
 
   render() {
-    // const stepStyle = this.props.group ? `${styles.step} ${styles.group}` : styles.step;
     const stepStyle = this.props.loop[this.props.step] ? styles.on : styles.off;
-    // return <input type="checkbox" className={stepStyle} name={this.props.step} onChange={this.props.logic} />;
-    return <div className={stepStyle} name={this.props.step} onClick={this.sendToLoop}></div>;
 
+    return (
+    <div className={stepStyle} onClick={this.sendToLoop} name={this.props.step}>
+      <div ref={this.props.forwardRef} className={styles.inner} ></div>
+    </div >);
   }
 }
  
-export default Step; 
+export default React.forwardRef((props, ref) => <Step {...props} forwardRef={ref} />)
