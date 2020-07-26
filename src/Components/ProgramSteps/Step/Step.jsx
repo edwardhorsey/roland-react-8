@@ -14,12 +14,15 @@ class Step extends Component {
   }
 
   render() {
-    // const stepStyle = this.props.group ? `${styles.step} ${styles.group}` : styles.step;
     const stepStyle = this.props.loop[this.props.step] ? styles.on : styles.off;
-    // return <input type="checkbox" className={stepStyle} name={this.props.step} onChange={this.props.logic} />;
-    return <div className={stepStyle} name={this.props.step} onClick={this.sendToLoop}></div>;
+    const currentStepStyle = this.props.currentSixteenth === this.props.step ? styles.current : '';
+    console.log(currentStepStyle)
 
+    return (
+    <div className={stepStyle} onClick={this.sendToLoop} name={this.props.step}>
+      <div className={currentStepStyle} ></div>
+    </div >);
   }
 }
  
-export default Step; 
+export default Step;

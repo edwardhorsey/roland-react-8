@@ -1,15 +1,22 @@
 .instrument {
   display: flex;
   justify-content: space-evenly;
-
-  h2 {
+  
+  h2{
     width: 10%;
+    &.on{
+      color: red;
+    }
+    &.off {
+      color: blue;
+    }
   }
+
   section {
     display: flex;
     input {
       width: 30px;
       height: 30px;
     }
-  }
+  } 
 }

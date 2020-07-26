@@ -7,17 +7,17 @@ class MachineSequencer extends Component {
 
   render() { 
 
-    const { updateLoop, clearLoop, loop, fillLoop } = this.props
+    const { currentSixteenth, updateLoop, clearLoop, loop, fillLoop } = this.props
 
     return (
       <article className={styles.sequencer}>
-        <ProgramSteps title={'Clap'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Clap']}/>
-        <ProgramSteps title={'Hat'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Hat']}/>
-        <ProgramSteps title={'Open Hat'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Open Hat']}/>
-        <ProgramSteps title={'Cymbal'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Cymbal']}/>
-        <ProgramSteps title={'Hi Tom'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Hi Tom']}/>
-        <ProgramSteps title={'Lo Tom'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Lo Tom']}/>
-        <ProgramSteps title={'Kick'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Kick']}/>
+        <ProgramSteps currentSixteenth={currentSixteenth} title={'Clap'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Clap']}/>
+        <ProgramSteps currentSixteenth={currentSixteenth} title={'Hat'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Hat']}/>
+        <ProgramSteps currentSixteenth={currentSixteenth} title={'Open Hat'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Open Hat']}/>
+        <ProgramSteps currentSixteenth={currentSixteenth} title={'Cymbal'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Cymbal']}/>
+        <ProgramSteps currentSixteenth={currentSixteenth} title={'Hi Tom'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Hi Tom']}/>
+        <ProgramSteps currentSixteenth={currentSixteenth} title={'Lo Tom'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Lo Tom']}/>
+        <ProgramSteps currentSixteenth={currentSixteenth} title={'Kick'} updateLoop={updateLoop} clearLoop={clearLoop} fillLoop={fillLoop} loop={loop['Kick']}/>
       </article>
     );
   }

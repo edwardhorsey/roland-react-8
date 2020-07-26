@@ -25,19 +25,21 @@ class InstrumentControls extends Component {
 
   render() { 
 
+    const { start, stop, distortionOn, distorted } = this.props;
+    const { tempo, master } = this.state;
 
     return (
       <section className={styles.instrControls}>
         <h3>Instrument Controls</h3>
         <section clasName={styles.instrKnobs}>
-          <Button text={'Start'} logic={this.props.start} />
-          <Button text={'Stop'} logic={this.props.stop} />
+        <Button text={'Start'} logic={start} />
+          <Button text={'Stop'} logic={stop} />
           <Donut
             diameter={130}
             min={30}
             max={240}
             step={1}
-            value={this.state.tempo}
+            value={tempo}
             theme={{
                 donutColor: 'Black'
             }}
@@ -51,7 +53,7 @@ class InstrumentControls extends Component {
             min={0}
             max={100}
             step={1}
-            value={this.state.master}
+            value={master}
             theme={{
                 donutColor: 'Black'
             }}
@@ -60,7 +62,7 @@ class InstrumentControls extends Component {
           >
             <label id={'my-label'}>Master Gain</label>
           </Donut>
-          <FXButton text={'DISTORTION'} logic={this.props.distortionOn} dist={this.props.distorted} />
+          <FXButton text={'DISTORTION'} logic={distortionOn} dist={distorted} />
         </section>
         <div className={styles.aboutMe}>
           <p> <span role="img" aria-label="WIP">🚧</span> Work In Progress <span role="img" aria-label="WIP">🚧</span> </p>

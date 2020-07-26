@@ -36,7 +36,8 @@ class App extends Component {
       'Hi Tom': [ 0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
       'Lo Tom': [ 0,0,0,0, 0,0,0,0, 0,1,0,1, 0,0,0,0  ], // [ 0,0,0,1, 0,0,1,0, 0,0,0,0, 0,1,0,0, 0,0,0,1, 0,0,1,0, 0,0,0,1, 0,0,1,0 ],
       'Kick': [ 1,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,1,0 ], // [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ]
-    }
+    },
+    currentSixteenth: '',
   }
   
   gainNodes = ''
@@ -102,13 +103,14 @@ class App extends Component {
   
   scheduleNote = (beatNumber, time) => {
     const { loop, bufferLoader } = this.state
-
+    
     // const notesInQueue = [];  
     // console.log(time);
     // notesInQueue.push({  note: beatNumber, time: time  });
     
     console.log(this.current16thNote, beatNumber);  
     
+    this.setState({currentSixteenth: this.current16thNote})
     for (let prop in loop) {
       if (loop[prop][this.current16thNote]) this.playSample(bufferLoader[prop], this.gainNodes[prop], time);
     }
@@ -138,9 +140,10 @@ class App extends Component {
   }
   
   stop = () => {
+    this.setState({currentSixteenth: null})
     window.clearTimeout(this.timerID);
   }
-  
+
   distortionOn = () => {
     if (!this.state.distortionOn) {
       this.distortionOut.gain.value = 0.7;
@@ -207,6 +210,7 @@ class App extends Component {
             distorted={this.state.distortionOn}
           />
           <MachineSequencer
+            currentSixteenth={this.state.currentSixteenth}
             updateLoop={this.updateLoop}
             clearLoop={this.clearLoop}
             fillLoop={this.fillLoop}
