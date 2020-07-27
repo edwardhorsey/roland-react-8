@@ -3,6 +3,10 @@ import styles from './InstrumentControls.module.scss';
 import { Donut } from 'react-dial-knob'
 import Button from '../Button';
 import FXButton from '../FXButton';
+import '../../data/fa-libray';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+
 
 
 class InstrumentControls extends Component {
@@ -80,6 +84,7 @@ class InstrumentControls extends Component {
         <div className={styles.aboutMe}>
           <p> <span role="img" aria-label="WIP">🚧</span> Work In Progress <span role="img" aria-label="WIP">🚧</span> </p>
           <p className={styles.italics}>made by Edward Horsey</p>
+          <a href="https://github.com/edwardhorsey" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={["fab", "github"]} /></a>
         </div>
       </section>
      );

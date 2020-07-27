@@ -13,9 +13,18 @@
     width: 60%;
   }
   div {
-    p {
-      &.italics {
-        font-style: italic;
+    &.aboutMe {
+      text-align: right;
+      p {
+        &.italics {
+          font-style: italic;
+        }
+      }
+      a{
+        font-size: 1.6em;
+        &:visited{
+          color: black
+        }
       }
     }
   }
