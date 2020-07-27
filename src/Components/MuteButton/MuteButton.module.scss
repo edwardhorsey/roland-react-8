@@ -8,6 +8,7 @@
   &:hover { 
     background-color: rgb(66, 129, 99);
   }
+  user-select: none; 
 }
 
 .muteButtonOn {
@@ -20,4 +21,5 @@
   &:hover { 
     background-color: rgb(179, 107, 107);
   }
+  user-select: none; 
 }

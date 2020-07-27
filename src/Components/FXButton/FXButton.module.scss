@@ -9,6 +9,7 @@
   &:hover { 
     background-color: rgb(78, 72, 72);
   }
+  user-select: none; 
 }
 
 .FXButtonOn {
@@ -22,5 +23,6 @@
   &:hover { 
   background-color: rgb(138, 76, 76);
   }
+  user-select: none;
 }
 

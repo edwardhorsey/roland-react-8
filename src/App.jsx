@@ -47,7 +47,7 @@ class App extends Component {
   notesInQueue = []
   lastNoteDrawn = 0
   lookahead = 25.0
-  scheduleAheadTime = 0.250
+  scheduleAheadTime = 0.200
   timerID = ''
   unlocked = false
   tempo = 130
@@ -168,8 +168,20 @@ class App extends Component {
   }
   
   stop = () => {
-    this.setState({currentSixteenth: null})
     window.clearTimeout(this.timerID);
+  }
+
+  reset = () => {
+    window.clearTimeout(this.timerID);
+    this.current16thNote = 0;
+    console.log('reset')
+    setTimeout(
+      ()=>{
+        for (let prop in this.stepRefs){
+          this.stepRefs[prop].forEach(ref => ref.current.style.backgroundColor = '')
+        }
+      }, 250
+    )
   }
 
   distortionOn = () => {
@@ -238,6 +250,7 @@ class App extends Component {
             updateMaster={this.updateMaster}
             start={this.start}
             stop={this.stop}
+            reset={this.reset}
             updateGain={this.updateGain}
             distortionOn={this.distortionOn}
             distorted={this.state.distortionOn}

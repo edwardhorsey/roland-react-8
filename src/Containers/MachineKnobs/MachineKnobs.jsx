@@ -13,6 +13,7 @@ class MachineKnobs extends Component {
       updateMaster,
       start,
       stop,
+      reset,
       updateGain,
       distortionOn,
       distorted
@@ -28,6 +29,7 @@ class MachineKnobs extends Component {
           updateMaster={updateMaster}
           start={start}
           stop={stop}
+          reset={reset}
           distortionOn={distortionOn}
           distorted={distorted}
         />

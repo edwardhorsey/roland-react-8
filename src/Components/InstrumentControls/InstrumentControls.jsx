@@ -11,6 +11,17 @@ class InstrumentControls extends Component {
     tempo: 130,
     master: 80,
     distortion: false,
+    isPlaying: false,
+  }
+
+  playPause = () => {
+    this.state.isPlaying ? this.props.stop() : this.props.start();
+    this.setState({ isPlaying: !this.state.isPlaying })
+  }
+
+  reset = () => {
+    this.setState({ isPlaying: false })
+    this.props.reset();
   }
 
   tempoChange = tempo => {
@@ -25,15 +36,17 @@ class InstrumentControls extends Component {
 
   render() { 
 
-    const { start, stop, distortionOn, distorted } = this.props;
-    const { tempo, master } = this.state;
+    const { distortionOn, distorted } = this.props;
+    const { tempo, master, isPlaying } = this.state;
+
+    const playButton = isPlaying? <Button text={'Pause'} logic={this.playPause} /> : <Button text={'Play'} logic={this.playPause} /> ;
 
     return (
       <section className={styles.instrControls}>
         <h3>Instrument Controls</h3>
         <section clasName={styles.instrKnobs}>
-        <Button text={'Start'} logic={start} />
-          <Button text={'Stop'} logic={stop} />
+          {playButton}
+          <Button text={'Stop'} logic={this.reset} />
           <Donut
             diameter={130}
             min={30}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Step from './Step';
+import Step from '../Step';
 import styles from './ProgramSteps.module.scss';
 import Button from '../Button';
 
@@ -19,8 +19,6 @@ class ProgramSteps extends Component {
     this.props.storeStepRefs(this.props.title, this.stepRefs)
   }
 
-  allTheRefs=[]
-
   renderSteps = (num) => {
     let output = [];
     for (let i=0; i<num; i++) {
@@ -37,10 +35,6 @@ class ProgramSteps extends Component {
 
   render() { 
     let steps =  this.renderSteps(16)
-    console.log(this.stepRefs);
-
-    // const randomStep = this.stepRefs[4].current;
-    // randomStep.classList.toggle('on')
 
     return (
       <article className={styles.instrument}>
