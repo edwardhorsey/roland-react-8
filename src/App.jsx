@@ -117,26 +117,15 @@ class App extends Component {
   draw = () => {
     let drawNote = this.lastNoteDrawn;
     let currentTime = this.state.context.currentTime;
-
     while (this.notesInQueue.length && this.notesInQueue[0].time < currentTime) {
         drawNote = this.notesInQueue[0].note;
         this.notesInQueue.splice(0,1);
     }
     if (this.lastNoteDrawn !== drawNote) {
-      this.stepRefs['Clap'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
-      this.stepRefs['Clap'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
-      this.stepRefs['Hat'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
-      this.stepRefs['Hat'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
-      this.stepRefs['Open Hat'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
-      this.stepRefs['Open Hat'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
-      this.stepRefs['Cymbal'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
-      this.stepRefs['Cymbal'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
-      this.stepRefs['Hi Tom'][this.lastNoteDrawn].current.style.backgroundColor = '';  
-      this.stepRefs['Hi Tom'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
-      this.stepRefs['Lo Tom'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
-      this.stepRefs['Lo Tom'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
-      this.stepRefs['Kick'][this.lastNoteDrawn].current.style.backgroundColor = ''; 
-      this.stepRefs['Kick'][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      for (let prop in this.stepRefs) {
+        this.stepRefs[prop][this.lastNoteDrawn].current.style.backgroundColor = ''; 
+        this.stepRefs[prop][drawNote].current.style.backgroundColor = 'rgba(241, 241, 241, 0.3)';
+      }
       this.lastNoteDrawn = drawNote;
     }
     requestAnimationFrame(this.draw);
@@ -217,7 +206,6 @@ class App extends Component {
       let newValue = (gainStage[instr] * value) / 100;
       this.gainNodes[instr].gain.value = newValue;
     }
-    console.log(this.gainNodes)
   }
 
   updateMaster = (value) => {
@@ -232,12 +220,9 @@ class App extends Component {
 
   storeStepRefs = (title, array) => {
     this.stepRefs[title] = array;
-    console.log(this.stepRefs);
   }
 
   render() {
-
-    console.log(this.state)
 
     return (
       <AudioProvider>

@@ -4,13 +4,9 @@ import styles from './Step.module.scss';
 
 class Step extends Component {
 
-  state = {
-    selected: false,
-  }
-
   sendToLoop = () => {
-    this.props.logic(this.props.step, !this.state.selected)
-    this.setState({ selected: !this.state.selected})
+    const newState = this.props.loop[this.props.step];
+    this.props.logic(this.props.step, newState === 0 ? 1 : 0)
   }
 
   render() {
