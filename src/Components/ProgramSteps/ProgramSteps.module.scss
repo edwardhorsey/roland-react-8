@@ -1,9 +1,10 @@
 .instrument {
   display: flex;
   justify-content: space-evenly;
+  min-width: 1000px;
   
-  h2{
-    width: 10%;
+  h3{
+    width: 90px;
   }
 
   section {

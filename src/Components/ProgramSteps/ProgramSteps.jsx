@@ -38,7 +38,7 @@ class ProgramSteps extends Component {
 
     return (
       <article className={styles.instrument}>
-        <h2>{this.props.title}</h2>
+        <h3>{this.props.title}</h3>
         <section>
           {steps}
         </section>

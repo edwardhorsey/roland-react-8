@@ -2,11 +2,12 @@
   display: flex;
   flex-direction: column;
   background-color: rgb(236, 236, 236);
-  padding: 20px;
+  min-width: 1100px;
 
   .sampleControls {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    min-width: 1150px;
   }
 }
