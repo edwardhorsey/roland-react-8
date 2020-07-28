@@ -242,7 +242,6 @@ class App extends Component {
     return (
       <AudioProvider>
         <div className={styles.app}>
-          <p>Roland-React-8</p>
           <MachineKnobs
             updateTempo={this.updateTempo}
             updateMaster={this.updateMaster}

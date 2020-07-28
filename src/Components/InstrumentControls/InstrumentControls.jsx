@@ -47,7 +47,10 @@ class InstrumentControls extends Component {
 
     return (
       <section className={styles.instrControls}>
-        <h3>Instrument Controls</h3>
+        <div>
+          <h2>Roland-React-8</h2>
+          <h3>Instrument Controls</h3>
+        </div>
         <section clasName={styles.instrKnobs}>
           {playButton}
           <Button text={'Stop'} logic={this.reset} />
