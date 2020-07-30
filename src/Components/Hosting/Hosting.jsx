@@ -1,6 +1,4 @@
-import '@firebase/firestore'
-import firestore from "../../firebase";
-import firebase, { provider } from "../../firebase";
+import firebase, { provider, firestore } from "../../firebase";
 import React, { Component } from 'react';
 import styles from './Hosting.module.scss';
 import Button from "../Button";
@@ -41,7 +39,7 @@ class Hosting extends Component {
     firestore
     .collection('Beats')
     .doc(this.state.user.uid)
-    .set({ beatName:  { ...this.props.loop } })
+    .set({ [beatName]:  { ...this.props.loop } })
     .catch((err) => console.log(err));
   }
 
