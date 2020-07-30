@@ -8,8 +8,10 @@ class PrivateRoutes extends Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
-        alert('You have to log in to see');
+        console.log('You have to log in to see');
         navigate('/');
+      } else {
+        navigate('/yourbeats')
       }
     })
   }

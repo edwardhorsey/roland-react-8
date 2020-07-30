@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styles from './App.module.scss';
-// import Hosting from "./Components/Hosting";
+import firebase from './firebase';
+import Hosting from "./Components/Hosting";
 
 import { AudioProvider } from "./context/audioEngine.js";
 import { filenames } from "./data/filenames";
@@ -238,14 +239,16 @@ class App extends Component {
             distorted={this.state.distortionOn}
           />
           <MachineSequencer
-            currentSixteenth={this.state.currentSixteenth}
             updateLoop={this.updateLoop}
             clearLoop={this.clearLoop}
             fillLoop={this.fillLoop}
             loop={this.state.loop}
             storeStepRefs={this.storeStepRefs}
           />
-          {/* <Hosting /> */}
+          <Hosting
+            loop={this.state.loop}
+            updateLoop={this.updateLoop}
+          />
         </div>
       </AudioProvider>
     );

@@ -1,7 +1,10 @@
-import React, { Component } from 'react';
-// import styles from './Hosting.module.scss';
+import '@firebase/firestore'
+import firestore from "../../firebase";
 import firebase, { provider } from "../../firebase";
+import React, { Component } from 'react';
+import styles from './Hosting.module.scss';
 import Button from "../Button";
+import Routes from "../Routes";
 
 class Hosting extends Component {
   state = {
@@ -27,20 +30,44 @@ class Hosting extends Component {
   }
   getUser = () => firebase.auth().onAuthStateChanged(user => user ? this.setState({ user }) : this.setState({ user: null }))
 
-  render() { 
+  storeName = (event)=>{
+    console.log(event)
+    this.setState({ beatName: event.target.value })
+  }
 
-    // this.getUser();
+  storePattern = () => {
+    let beatName = this.state.beatName;
+    console.log(beatName);
+    firestore
+    .collection('Beats')
+    .doc(this.state.user.uid)
+    .set({ beatName:  { ...this.props.loop } })
+    .catch((err) => console.log(err));
+  }
+
+  loadLoop = () => {
+    // firestore
+    //     .collection("recipes")
+    //     .get()
+    //     .then((querySnapshot) => {
+    //         const favourites = querySnapshot.docs
+    //             .filter((doc) => doc.data().uid === this.context.user.uid)
+    //             .map((doc) => doc.data());
+    //         this.setState({ favourites })
+    //     })
+    //     .catch((err) => console.log(err));
+};
+
+  render() { 
 
     const userDetails = this.state.user ? <p>Hello {this.state.user.displayName}</p> : <p>Not signed in</p>;
 
     return (
       <>
-        <p>Hello from hosting</p>
         {userDetails}
-        <Button text="Sign in" logic={this.signIn} />
-        <Button text="Sign out" logic={this.signOut} />
 
-      {/* <Routes user={this.state.user} /> */}
+        <Button text={this.state.user? 'Sign out' : 'Sign in'} logic={this.state.user? this.signOut : this.signIn} />
+        <Routes user={this.state.user} storeName={this.storeName} storePattern={this.storePattern} />
 
       </>
     );
