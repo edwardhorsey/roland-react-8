@@ -1,4 +1,10 @@
-.selectAndStore {
+.ownBeats {
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;
+  .selectAndStore {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
 }

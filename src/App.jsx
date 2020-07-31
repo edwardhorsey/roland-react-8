@@ -201,6 +201,10 @@ class App extends Component {
     newSequence[instr] = [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ];
     this.setState({ loop: newSequence });
   }
+
+  loadLoop = (loop) => {
+    this.setState({ loop });
+  }
   
   updateGain = (instr, value) => {
     if (this.gainNodes) { 
@@ -237,6 +241,8 @@ class App extends Component {
             updateGain={this.updateGain}
             distortionOn={this.distortionOn}
             distorted={this.state.distortionOn}
+            loop={this.state.loop}
+            loadLoop={this.loadLoop}
           />
           <MachineSequencer
             updateLoop={this.updateLoop}
@@ -244,10 +250,6 @@ class App extends Component {
             fillLoop={this.fillLoop}
             loop={this.state.loop}
             storeStepRefs={this.storeStepRefs}
-          />
-          <Hosting
-            loop={this.state.loop}
-            updateLoop={this.updateLoop}
           />
         </div>
       </AudioProvider>

@@ -16,10 +16,11 @@
     justify-content: space-evenly;
     width: 60%;
   }
+
   div {
     &.aboutMe {
-      max-width: 20%;
-      text-align: right;
+      margin-top: 10px;
+      text-align: left;
       p {
         &.italics {
           font-style: italic;

@@ -5,7 +5,7 @@ import Button from '../Button';
 import FXButton from '../FXButton';
 import '../../data/fa-library';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import Hosting from '../Hosting';
 
 
 
@@ -50,6 +50,11 @@ class InstrumentControls extends Component {
         <div>
           <h2>Roland-React-8</h2>
           <h3>Instrument Controls</h3>
+          <div className={styles.aboutMe}>
+            <p> <span role="img" aria-label="WIP">🚧</span> Work In Progress <span role="img" aria-label="WIP">🚧</span> </p>
+            <p className={styles.italics}>made by Edward Horsey</p>
+            <a href="https://github.com/edwardhorsey" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={["fab", "github"]} /></a>
+          </div>
         </div>
         <section clasName={styles.instrKnobs}>
           {playButton}
@@ -84,11 +89,7 @@ class InstrumentControls extends Component {
           </Donut>
           <FXButton text={'DISTORTION'} logic={distortionOn} dist={distorted} />
         </section>
-        <div className={styles.aboutMe}>
-          <p> <span role="img" aria-label="WIP">🚧</span> Work In Progress <span role="img" aria-label="WIP">🚧</span> </p>
-          <p className={styles.italics}>made by Edward Horsey</p>
-          <a href="https://github.com/edwardhorsey" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={["fab", "github"]} /></a>
-        </div>
+        <Hosting loop={this.props.loop} loadLoop={this.loadLoop} />
       </section>
      );
   }

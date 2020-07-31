@@ -32,6 +32,8 @@ class MachineKnobs extends Component {
           reset={reset}
           distortionOn={distortionOn}
           distorted={distorted}
+          loop={this.props.loop}
+          loadLoop={this.props.loadLoop}
         />
       </article>
       <article className={styles.sampleControls}>
