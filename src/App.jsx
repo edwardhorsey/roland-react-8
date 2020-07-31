@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import styles from './App.module.scss';
-// import Hosting from "./Components/Hosting";
-
-import { AudioProvider } from "./context/audioEngine.js";
 import { filenames } from "./data/filenames";
 import { setupSample } from "./engine/load-samples";
 import { 
@@ -20,8 +17,26 @@ import MachineSequencer from './Containers/MachineSequencer';
 import MachineKnobs from './Containers/MachineKnobs';
 
 
+
 class App extends Component {
   
+  constructor(props) {
+    super(props)
+    this.gainNodes = '';
+    this.masterGain = '';
+    this.mainOut = '';
+    this.stepRefs = {};
+    this.notesInQueue = [];
+    this.lastNoteDrawn = 0;
+    this.lookahead = 25.0;
+    this.scheduleAheadTime = 0.200;
+    this.timerID = '';
+    this.unlocked = false;
+    this.tempo = 130;
+    this.current16thNote = 0;
+    this.nextNoteTime = 0.0;
+  }
+
   state = {
     context: {}, // audio context
     bufferLoader: {}, // samples
@@ -38,20 +53,6 @@ class App extends Component {
     currentSixteenth: '',
   }
   
-  gainNodes = ''
-  masterGain = ''
-  mainOut = ''
-  stepRefs = {}
-  notesInQueue = []
-  lastNoteDrawn = 0
-  lookahead = 25.0
-  scheduleAheadTime = 0.200
-  timerID = ''
-  unlocked = false
-  tempo = 130
-  current16thNote = 0
-  nextNoteTime = 0.0
-  
   async componentDidMount(){
     let context = new AudioContext();
     await setupSample(context, filenames)
@@ -63,7 +64,6 @@ class App extends Component {
       this.gainNodes = setupGainNodes(this.state.context, filenames);
       this.mainDryOut = createMainDryOut(this.state.context);
       this.masterGain = createMasterGain(this.state.context);
-      console.log('loaded gain nodes');
     })
     .then(() => {
       this.distortion = createDistortion(this.state.context);
@@ -71,7 +71,7 @@ class App extends Component {
       this.distortionOut = createDistortionOut(this.state.context);
     })
     .then(()=>{
-        this.limiter = createLimiter(this.state.context)
+      this.limiter = createLimiter(this.state.context)
     })
     .catch(err => console.log(err))
   }
@@ -103,12 +103,9 @@ class App extends Component {
   }
   
   scheduleNote = (beatNumber, time) => {
-    const { loop, bufferLoader } = this.state
-    
+    const { loop, bufferLoader } = this.state;
     this.notesInQueue.push({  note: beatNumber, time: time  });
-    
     console.log(this.current16thNote, beatNumber, this.notesInQueue);  
-    
     for (let prop in loop) {
       if (loop[prop][this.current16thNote]) this.playSample(bufferLoader[prop], this.gainNodes[prop], time);
     }
@@ -200,6 +197,10 @@ class App extends Component {
     newSequence[instr] = [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ];
     this.setState({ loop: newSequence });
   }
+
+  loadLoop = (loop) => {
+    this.setState({ loop });
+  }
   
   updateGain = (instr, value) => {
     if (this.gainNodes) { 
@@ -225,7 +226,6 @@ class App extends Component {
   render() {
 
     return (
-      <AudioProvider>
         <div className={styles.app}>
           <MachineKnobs
             updateTempo={this.updateTempo}
@@ -236,18 +236,17 @@ class App extends Component {
             updateGain={this.updateGain}
             distortionOn={this.distortionOn}
             distorted={this.state.distortionOn}
+            loop={this.state.loop}
+            loadLoop={this.loadLoop}
           />
           <MachineSequencer
-            currentSixteenth={this.state.currentSixteenth}
             updateLoop={this.updateLoop}
             clearLoop={this.clearLoop}
             fillLoop={this.fillLoop}
             loop={this.state.loop}
             storeStepRefs={this.storeStepRefs}
           />
-          {/* <Hosting /> */}
         </div>
-      </AudioProvider>
     );
   }
 }

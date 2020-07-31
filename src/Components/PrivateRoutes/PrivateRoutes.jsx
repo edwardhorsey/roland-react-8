@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import firebase from "../../firebase";
-import { Router, navigate } from "@reach/router";
+import { navigate } from "@reach/router";
 
 
 class PrivateRoutes extends Component {
@@ -8,8 +8,10 @@ class PrivateRoutes extends Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (!user) {
-        alert('You have to log in to see');
+        console.log('You have to log in to see');
         navigate('/');
+      } else {
+        navigate('/yourbeats')
       }
     })
   }

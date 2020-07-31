@@ -1,0 +1,15 @@
+.ownBeats {
+  display: flex;
+  flex-direction: column;
+  .selectAndStore {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    input {
+      padding: 5px;
+    }
+    select {
+      padding: 3px;
+    }
+  }
+}
