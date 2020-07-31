@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Button from "../Button";
 import styles from "./OwnBeats.module.scss"
-import firebase, { provider, firestore } from "../../firebase";
 
 class OwnBeats extends Component {
 
@@ -18,23 +17,14 @@ class OwnBeats extends Component {
     this.props.loadLoop(loop)
   };
 
-  loadPattern = () => {
-    console.log('load a pattern');
-  }
-
-  storePattern = () => {
-    console.log('pattern stored');
-  }
-
   render() {
     console.log(this.props)
     return (
       <>
         <div className={styles.ownBeats}>
-          <h4>Your beats</h4>
           <p>Select a beat to load</p>
           <div className={styles.selectAndStore}>
-            <select name="" id="" onChange={this.loadLoop}>
+            <select name="Your loops" onChange={this.loadLoop}>
               {this.renderOptions()}
             </select>
             <p>Save your beat</p>

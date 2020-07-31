@@ -57,42 +57,51 @@ class InstrumentControls extends Component {
           </div>
         </div>
         <section clasName={styles.instrKnobs}>
-          {playButton}
-          <Button text={'Stop'} logic={this.reset} />
+          <div className={styles.playButtons}>
+            {playButton}
+            <Button text={'Stop'} logic={this.reset} />
+          </div>
           <Donut
-            diameter={130}
+            diameter={105}
             min={30}
             max={240}
             step={1}
             value={tempo}
             theme={{
-                donutColor: 'Black'
+                donutColor: 'Black',
+                donutThickness: 25,
             }}
             onValueChange={this.tempoChange}
-            ariaLabelledBy={'my-label'}
+            ariaLabelledBy={'tempo'}
           >
-            <label id={'my-label'}>Tempo</label>
+            <label id={'tempo'}>Tempo</label>
           </Donut>
           <Donut
-            diameter={130}
+            diameter={105}
             min={0}
             max={100}
             step={1}
             value={master}
             theme={{
-                donutColor: 'Black'
+                donutColor: 'Black',
+                donutThickness: 25,
             }}
             onValueChange={this.masterChange}
-            ariaLabelledBy={'my-label'}
+            ariaLabelledBy={'master-gain'}
           >
-            <label id={'my-label'}>Master Gain</label>
+            <label id={'master-gain'}>Master Gain</label>
           </Donut>
           <FXButton text={'DISTORTION'} logic={distortionOn} dist={distorted} />
         </section>
-        <Hosting loop={this.props.loop} loadLoop={this.loadLoop} />
+        <Hosting loop={this.props.loop} loadLoop={this.props.loadLoop} />
       </section>
      );
   }
 }
  
 export default InstrumentControls;
+
+
+
+
+// https://pavelkukov.github.io/react-dial-knob/iframe.html?id=knob-skins--donut&knob-Diameter=180&knob-Min=0&knob-Max=10&knob-Step=1&knob-Value=3&knob-Thickness=15&knob-Color=#1BA098&knob-Background=#e1e1e1&knob-Background (Max reached)=#051622&knob-Center Color=#fff&knob-Focused Center Color=#F7F4E9

@@ -6,7 +6,6 @@ export class AudioProvider extends Component {
 
   state = {
     context: '',
-    hied: 'hieed',
   }
 
   render() {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Router } from "@reach/router";
-import { firestore } from "../../firebase";
 import PrivateRoutes from "../PrivateRoutes";
 import OwnBeats from "../OwnBeats";
 

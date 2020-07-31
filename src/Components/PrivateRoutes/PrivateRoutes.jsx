@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import firebase from "../../firebase";
-import { Router, navigate } from "@reach/router";
+import { navigate } from "@reach/router";
 
 
 class PrivateRoutes extends Component {

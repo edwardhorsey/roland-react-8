@@ -37,13 +37,9 @@ class MachineKnobs extends Component {
         />
       </article>
       <article className={styles.sampleControls}>
-        <SampleControls title={'Clap'} updateGain={updateGain} />
-        <SampleControls title={'Hat'} updateGain={updateGain} />
-        <SampleControls title={'Open Hat'} updateGain={updateGain} />
-        <SampleControls title={'Cymbal'} updateGain={updateGain} />
-        <SampleControls title={'Hi Tom'} updateGain={updateGain} />
-        <SampleControls title={'Lo Tom'} updateGain={updateGain} />
-        <SampleControls title={'Kick'} updateGain={updateGain} />
+        {['Clap', 'Hat', 'Open Hat', 'Cymbal', 'Hi Tom', 'Lo Tom', 'Kick'].map((sample, index) => {
+          return <SampleControls key={index} title={sample} updateGain={updateGain} />
+        })}
       </article>
 
     </section>
