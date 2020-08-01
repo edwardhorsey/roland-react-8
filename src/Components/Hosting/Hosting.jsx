@@ -1,7 +1,6 @@
 import firebase, { provider, firestore } from "../../firebase";
 import React, { Component } from 'react';
 import styles from './Hosting.module.scss';
-import Button from "../Button";
 import Routes from "../Routes";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../data/fa-library';
@@ -64,6 +63,7 @@ class Hosting extends Component {
 
   render() {
     const userDetails = this.state.user ? <p>Hello {this.state.user.displayName.split(' ')[0]}</p> : <p>Not signed in</p>;
+    const notLoggedInMessage = this.state.user ? '' : <p>Sign in to save your loops</p>;
     const signInIcons = this.state.user ? (
       <FontAwesomeIcon icon={["fas", "sign-out-alt"]} onClick={this.signOut} />
     ) : (
@@ -83,6 +83,7 @@ class Hosting extends Component {
             {userDetails}
             <span className={styles.icons}>{signInIcons}</span>
         </div>
+        {notLoggedInMessage}
         <Routes user={this.state.user} storeName={this.storeName} storePattern={this.storePattern} userBeats={this.state.userBeats} loadLoop={this.props.loadLoop}/>
       </div>
       </>
