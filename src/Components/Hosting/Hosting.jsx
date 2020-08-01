@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import styles from './Hosting.module.scss';
 import Button from "../Button";
 import Routes from "../Routes";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '../../data/fa-library';
 
 class Hosting extends Component {
   state = {
@@ -61,7 +63,12 @@ class Hosting extends Component {
 
 
   render() {
-    const userDetails = this.state.user ? <p>Hello {this.state.user.displayName}</p> : <p>Not signed in</p>;
+    const userDetails = this.state.user ? <p>Hello {this.state.user.displayName.split(' ')[0]}</p> : <p>Not signed in</p>;
+    const signInIcons = this.state.user ? (
+      <FontAwesomeIcon icon={["fas", "sign-out-alt"]} onClick={this.signOut} />
+    ) : (
+      <FontAwesomeIcon icon={["fas", "sign-in-alt"]} onClick={this.signIn} />
+    ) ;
     if (
       this.state.user
       && this.state.user.uid
@@ -72,8 +79,10 @@ class Hosting extends Component {
     return (
       <>
       <div className={styles.hosting}>
-        {userDetails}
-        <Button text={this.state.user? 'Sign out' : 'Sign in'} logic={this.state.user? this.signOut : this.signIn} />
+        <div className={styles.signInOut}>
+            {userDetails}
+            <span className={styles.icons}>{signInIcons}</span>
+        </div>
         <Routes user={this.state.user} storeName={this.storeName} storePattern={this.storePattern} userBeats={this.state.userBeats} loadLoop={this.props.loadLoop}/>
       </div>
       </>

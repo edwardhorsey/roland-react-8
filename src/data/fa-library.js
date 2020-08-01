@@ -2,12 +2,14 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faGithub
 } from "@fortawesome/free-brands-svg-icons";
-import { faCheckSquare, faCoffee, faFileUpload, faSave, } from '@fortawesome/free-solid-svg-icons'
+import { faCheckSquare, faCoffee, faFileUpload, faSave, faSignInAlt, faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
 
 export default library.add(
   faGithub,
   faCheckSquare,
   faCoffee,
   faFileUpload,
-  faSave
+  faSave,
+  faSignOutAlt,
+  faSignInAlt,
 );

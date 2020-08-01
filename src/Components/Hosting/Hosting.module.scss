@@ -2,4 +2,16 @@
   border: 2px solid rgb(119, 118, 118);
   border-radius: 5px;
   padding: 10px;
+  .signInOut {
+    display: flex;
+    justify-content: space-between;
+    p {
+      margin: auto 0;
+    }
+    .icons {
+      font-size: 1.6em;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  }
 }

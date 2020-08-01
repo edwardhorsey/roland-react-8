@@ -1,6 +1,9 @@
 .ownBeats {
   display: flex;
   flex-direction: column;
+  p {
+    margin:3px 0;
+  }
   .selectAndStore {
     display: flex;
     flex-direction: column;
@@ -18,6 +21,7 @@
       }
       span {
         font-size: 1.6em;
+        cursor: pointer;
         &.success{
           -webkit-animation:pulsate-fwd .5s ease-in-out 2 both;
           animation:pulsate-fwd .5s ease-in-out 2 both;

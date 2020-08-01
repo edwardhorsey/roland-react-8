@@ -37,12 +37,10 @@ class OwnBeats extends Component {
   };
 
   render() {
-    console.log(this.props, this.inputRef, this.state)
     return (
-      <>
         <div className={styles.ownBeats}>
-          <p>Select a beat to load</p>
           <div className={styles.selectAndStore}>
+          <p>Select a beat to load</p>
             <select name="Your loops" onChange={this.loadLoop}>
               {this.renderOptions()}
             </select>
@@ -53,7 +51,6 @@ class OwnBeats extends Component {
             </div>
           </div>
         </div>
-      </>
     );
   }
 }
