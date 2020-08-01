@@ -44,18 +44,18 @@ class Hosting extends Component {
     .catch((err) => console.log(err));
   }
   
-  storeName = (event)=>{
-    this.setState({ beatName: event.target.value })
-  }
-
-  storePattern = () => {
-    let beatName = this.state.beatName;
+  storePattern = (beatName) => {
+    let result = true;
     firestore
       .collection(this.state.user.uid)
       .doc(beatName)
       .set( { ...this.props.loop } )
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err);
+        result = false;
+      })
     this.getBeats();
+    return result;
   }
 
 

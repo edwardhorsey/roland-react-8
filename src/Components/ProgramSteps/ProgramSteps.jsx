@@ -8,9 +8,7 @@ class ProgramSteps extends Component {
     super(props);
     this.stepRefs = (()=>{
       let array=[];
-      for (let i=0;i<16;i++) {
-        array.push(React.createRef())
-      }
+      for (let i=0;i<16;i++) array.push(React.createRef());
       return array;
     })()
   }

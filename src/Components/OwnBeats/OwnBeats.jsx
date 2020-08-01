@@ -1,24 +1,43 @@
 import React, { Component } from "react";
-import Button from "../Button";
-import styles from "./OwnBeats.module.scss"
+import styles from "./OwnBeats.module.scss";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '../../data/fa-library';
 
 class OwnBeats extends Component {
+ 
+  state = { iconClass: false, beatName: '', }
+
+  componentDidMount() {
+    this.inputRef = React.createRef();
+  }
 
   renderOptions = () => {
     return this.props.userBeats.map((beat, index) => {
       console.log(beat);
       return <option key={index} value={beat.beatID}>{beat.beatID}</option>
     })
-  }
+  };
    
   loadLoop = (event) => {
-    console.log('updating loop with ' + event.target.value)
     const loop = this.props.userBeats.find(beat => beat.beatID === event.target.value).loop;
     this.props.loadLoop(loop)
   };
 
+  storeName = (event)=>{
+    this.setState({ beatName: event.target.value })
+  }
+
+  saveLoop = () => {
+      let answer = this.props.storePattern(this.state.beatName);
+      if (answer) {
+        this.setState({ iconClass: true });
+        this.inputRef.current.value = '';
+      }
+      setTimeout(() => {this.setState({ iconClass: false })}, 1000);
+  };
+
   render() {
-    console.log(this.props)
+    console.log(this.props, this.inputRef, this.state)
     return (
       <>
         <div className={styles.ownBeats}>
@@ -28,8 +47,10 @@ class OwnBeats extends Component {
               {this.renderOptions()}
             </select>
             <p>Save your beat</p>
-            <input type="text" placeholder="Name your beat" onChange={this.props.storeName}/>
-            <Button text="Store" logic={this.props.storePattern} />
+            <div className={styles.store}>
+              <input ref={this.inputRef} type="text" placeholder="Name your beat" required="yes" onChange={this.storeName}/>
+              <span className={this.state.iconClass ? styles.success : ''}><FontAwesomeIcon onClick={this.saveLoop} icon={["fas", "save"]} /></span>
+            </div>
           </div>
         </div>
       </>

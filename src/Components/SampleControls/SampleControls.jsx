@@ -32,22 +32,25 @@ class SampleControls extends Component {
 
     return (
       <article className={styles.sampleKnobs}>
-        <Donut
-          diameter={80}
-          min={0}
-          max={100}
-          font-size={10}
-          step={5}
-          value={this.state.gain}
-          theme={{
-            donutThickness: 20,
-            donutColor: 'Black',
-          }}
-          onValueChange={this.valueChange}
-          ariaLabelledBy={this.props.title}
-          >
-          <label id={this.props.title}>Gain</label>
-        </Donut>
+        <div className={styles.donut}>
+          <Donut
+            className={styles.donut}
+            diameter={80}
+            min={0}
+            max={100}
+            font-size={10}
+            step={5}
+            value={this.state.gain}
+            theme={{
+              donutThickness: 20,
+              donutColor: 'Black',
+            }}
+            onValueChange={this.valueChange}
+            ariaLabelledBy={this.props.title}
+            >
+          </Donut>
+        </div>
+        <label id={this.props.title}>Gain</label>
         <MuteButton text={this.props.title} logic={this.mute} muted={this.state.mute} />
       </article>
      );

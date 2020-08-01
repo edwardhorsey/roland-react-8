@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import styles from './InstrumentControls.module.scss';
-import { Donut } from 'react-dial-knob'
 import Button from '../Button';
 import FXButton from '../FXButton';
-import '../../data/fa-library';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Hosting from '../Hosting';
+import { Donut } from 'react-dial-knob'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import '../../data/fa-library';
 
 
 
