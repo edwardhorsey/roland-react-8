@@ -25,15 +25,20 @@ class OwnBeats extends Component {
 
   storeName = (event)=>{
     this.setState({ beatName: event.target.value })
+    this.inputRef.current.style.boxShadow = 'none';
   }
 
   saveLoop = () => {
+    if (this.state.beatName) {
       let answer = this.props.storePattern(this.state.beatName);
       if (answer) {
         this.setState({ iconClass: true });
         this.inputRef.current.value = '';
       }
-      setTimeout(() => {this.setState({ iconClass: false })}, 1000);
+    } else {
+      this.inputRef.current.style.boxShadow = 'inset 0 0 8px rgba(114, 47, 55, 0.7)';
+    }
+    setTimeout(() => {this.setState({ iconClass: false })}, 1000);
   };
 
   render() {

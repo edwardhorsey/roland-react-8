@@ -18,6 +18,12 @@
         padding: 3px;
         margin-right: 5px;
         font-size: 0.9em;
+        outline: none;
+        border: 1px solid black;
+        &:focus {
+        // border: 1px solid black;
+          outline: none;
+        }
       }
       span {
         font-size: 1.6em;
