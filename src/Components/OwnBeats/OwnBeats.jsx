@@ -9,11 +9,11 @@ class OwnBeats extends Component {
 
   componentDidMount() {
     this.inputRef = React.createRef();
+    this.selectRef = React.createRef();
   }
 
   renderOptions = () => {
     return this.props.userBeats.map((beat, index) => {
-      console.log(beat);
       return <option key={index} value={beat.beatID}>{beat.beatID}</option>
     })
   };
@@ -24,7 +24,7 @@ class OwnBeats extends Component {
   };
 
   storeName = (event)=>{
-    this.setState({ beatName: event.target.value })
+    this.setState({ beatName: event.target.value });
     this.inputRef.current.style.boxShadow = 'none';
   }
 
@@ -41,14 +41,19 @@ class OwnBeats extends Component {
     setTimeout(() => {this.setState({ iconClass: false })}, 1000);
   };
 
+  deletePattern = () => this.props.deletePattern(this.selectRef.current.value);
+
   render() {
     return (
         <div className={styles.ownBeats}>
           <div className={styles.selectAndStore}>
-          <p>Select a beat to load</p>
-            <select name="Your loops" onChange={this.loadLoop}>
-              {this.renderOptions()}
-            </select>
+            <p>Select a beat to load</p>
+            <div className={styles.pick}>
+              <select ref={this.selectRef} name="Your loops" onChange={this.loadLoop}>
+                {this.renderOptions()}
+              </select>
+              <span><FontAwesomeIcon onClick={this.deletePattern} icon={["fas", "trash-alt"]} /></span>
+            </div>
             <p>Save your beat</p>
             <div className={styles.store}>
               <input ref={this.inputRef} type="text" placeholder="Name your beat" required="yes" onChange={this.storeName}/>

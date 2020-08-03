@@ -51,7 +51,7 @@ class Hosting extends Component {
       .collection(this.state.user.uid)
       .doc(beatName)
       .set( { ...this.props.loop } )
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         result = false;
       })
@@ -59,7 +59,14 @@ class Hosting extends Component {
     return result;
   }
 
-
+  deletePattern = (beatName) => {
+    firestore
+      .collection(this.state.user.uid)
+      .doc(beatName)
+      .delete()
+      .then(this.getBeats())
+      .catch(err => console.log(err))
+  }
 
   render() {
     const userDetails = this.state.user ? <p>Hello {this.state.user.displayName.split(' ')[0]}</p> : <p>Not signed in</p>;
@@ -84,7 +91,14 @@ class Hosting extends Component {
             <span className={styles.icons}>{signInIcons}</span>
         </div>
         {notLoggedInMessage}
-        <Routes user={this.state.user} storeName={this.storeName} storePattern={this.storePattern} userBeats={this.state.userBeats} loadLoop={this.props.loadLoop}/>
+        <Routes
+          user={this.state.user}
+          storeName={this.storeName}
+          storePattern={this.storePattern}
+          userBeats={this.state.userBeats}
+          loadLoop={this.props.loadLoop}
+          deletePattern={this.deletePattern}
+        />
       </div>
       </>
     );

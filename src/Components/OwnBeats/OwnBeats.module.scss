@@ -11,17 +11,30 @@
     select {
       padding: 3px;
       font-size: 0.9em;
+      width: 170px;
+    }
+    .pick{
+      display: flex;
+      justify-content: space-between;
+      select {
+        margin-right: 5px;
+      }
+      span {
+        font-size: 1.6em;
+        cursor: pointer;
+      }
     }
     .store{
       display: flex;
+      justify-content: space-between;
       input {
         padding: 3px;
         margin-right: 5px;
         font-size: 0.9em;
         outline: none;
+        width: 170px;
         border: 1px solid black;
         &:focus {
-        // border: 1px solid black;
           outline: none;
         }
       }
