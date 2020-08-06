@@ -7,7 +7,12 @@ class MachineSequencer extends Component {
 
   render() { 
 
-    const { storeStepRefs, currentSixteenth, updateLoop, clearLoop, loop, fillLoop } = this.props
+    const { storeStepRefs,
+            currentSixteenth,
+            updateLoop,
+            clearLoop,
+            loop,
+            fillLoop } = this.props;
 
     return (
       <article className={styles.sequencer}>

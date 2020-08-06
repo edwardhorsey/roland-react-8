@@ -9,7 +9,6 @@ export const setupGainNodes = (audiocontext, files) => {
     obj[prop] = gain;
     obj[prop].gain.value = 0.7 * gainStage[prop]; // 0.7 is starting volume on all knobs
   }
-  console.log(obj)
   return obj;
 }
 

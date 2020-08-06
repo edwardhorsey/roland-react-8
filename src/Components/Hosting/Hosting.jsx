@@ -15,10 +15,7 @@ class Hosting extends Component {
     this.getUser();
   }
 
-  signIn = () => {
-    console.log('signin')
-    firebase.auth().signInWithRedirect(provider);
-  }
+  signIn = () => firebase.auth().signInWithRedirect(provider);
   
   signOut = () => {
     firebase

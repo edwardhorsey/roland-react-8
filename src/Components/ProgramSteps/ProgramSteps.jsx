@@ -26,10 +26,7 @@ class ProgramSteps extends Component {
     return output;
   }
 
-  updateLoop = (num, state) => {
-    console.log(num, state)
-    this.props.updateLoop(num, state, this.props.title);
-  }
+  updateLoop = (num, state) => this.props.updateLoop(num, state, this.props.title);
 
   render() { 
     let steps =  this.renderSteps(16)

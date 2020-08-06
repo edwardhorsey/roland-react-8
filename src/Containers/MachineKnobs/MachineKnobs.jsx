@@ -17,9 +17,7 @@ class MachineKnobs extends Component {
       updateGain,
       distortionOn,
       distorted
-    } = this.props
-
-    console.log(this.props)
+    } = this.props;
 
   return (
     <section className={styles.topSection}>

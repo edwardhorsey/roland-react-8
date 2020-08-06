@@ -42,13 +42,13 @@ class App extends Component {
     bufferLoader: {}, // samples
     distortionOn: false,
     loop: {
-      'Clap': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ],
-      'Hat': [ 0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,0,  ],
+      'Clap': [ 0,0,0,1, 0,1,0,0, 0,0,0,0, 0,0,0,0  ],
+      'Hat': [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,  ],
       'Open Hat': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ],
       'Cymbal': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0  ],
-      'Hi Tom': [ 0,0,0,0, 0,0,0,0, 0,0,1,0, 0,0,0,0  ],
-      'Lo Tom': [ 0,1,0,1, 0,0,0,0, 0,1,0,1, 0,0,1,0  ],
-      'Kick': [ 1,0,0,0, 1,0,0,1, 1,0,0,0, 1,0,0,0 ],
+      'Hi Tom': [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,1,0,0  ],
+      'Lo Tom': [ 0,1,0,1, 0,0,1,0, 0,1,0,1, 0,0,1,0  ],
+      'Kick': [ 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0 ],
     },
     currentSixteenth: '',
   }
@@ -95,9 +95,7 @@ class App extends Component {
       this.distortionOut.connect(this.masterGain);
     }
     this.mainDryOut.connect(this.masterGain);
-    // this.masterGain.connect(this.limiter);
     this.masterGain.connect(this.state.context.destination);
-    // this.limiter.connect(this.state.context.destination);
     sampleSource.start(time);
     return sampleSource;
   }
@@ -129,7 +127,6 @@ class App extends Component {
 }
   
   scheduler = () => {
-    // while there are notes that will need to play before the next interval, schedule them and advance the pointer.
     while (this.nextNoteTime < this.state.context.currentTime + this.scheduleAheadTime ) { 
       this.scheduleNote(this.current16thNote, this.nextNoteTime);
       this.nextNote();
@@ -139,7 +136,6 @@ class App extends Component {
   
   start = () => {
     if (!this.unlocked) {
-      console.log(this.unlocked, this.state.context)
       var buffer = this.state.context.createBuffer(1, 1, 22050);
       var node = this.state.context.createBufferSource();
       node.buffer = buffer;
@@ -151,14 +147,11 @@ class App extends Component {
     requestAnimationFrame(this.draw);
   }
   
-  stop = () => {
-    window.clearTimeout(this.timerID);
-  }
+  stop = () => window.clearTimeout(this.timerID);
 
   reset = () => {
     window.clearTimeout(this.timerID);
     this.current16thNote = 0;
-    console.log('reset')
     setTimeout(
       ()=>{
         for (let prop in this.stepRefs){
@@ -180,27 +173,24 @@ class App extends Component {
   }
 
   updateLoop = (num, state, instr) => {
-    let newSequence = this.state.loop;
+    const newSequence = this.state.loop;
     newSequence[instr][Number(num)] = state ? 1 : 0;
-    this.setState({ loop: newSequence }); 
-    console.log('updating', instr, 'with', newSequence);
+    this.setState({ loop: newSequence });
   }
 
   clearLoop = (instr) => {
-    let newSequence = this.state.loop;
+    const newSequence = this.state.loop;
     newSequence[instr] = [ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 ];
     this.setState({ loop: newSequence });
   }
   
   fillLoop = (instr) => {
-    let newSequence = this.state.loop;
+    const newSequence = this.state.loop;
     newSequence[instr] = [ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1 ];
     this.setState({ loop: newSequence });
   }
 
-  loadLoop = (loop) => {
-    this.setState({ loop });
-  }
+  loadLoop = (loop) => this.setState({ loop });
   
   updateGain = (instr, value) => {
     if (this.gainNodes) { 
@@ -210,18 +200,12 @@ class App extends Component {
   }
 
   updateMaster = (value) => {
-    if (this.masterGain) { 
-      this.masterGain.gain.value = (value) / 100
-    }
+    if (this.masterGain) this.masterGain.gain.value = (value) / 100;
   }
 
-  updateTempo = (newTempo) => {
-    this.tempo = newTempo;
-  }
+  updateTempo = (newTempo) => this.tempo = newTempo;
 
-  storeStepRefs = (title, array) => {
-    this.stepRefs[title] = array;
-  }
+  storeStepRefs = (title, array) => this.stepRefs[title] = array;
 
   render() {
 
