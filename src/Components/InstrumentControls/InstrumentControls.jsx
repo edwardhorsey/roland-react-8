@@ -51,6 +51,7 @@ class InstrumentControls extends Component {
           <h2>Roland-React-8</h2>
           <h3>Instrument Controls</h3>
           <div className={styles.aboutMe}>
+            <p> <span role="img" aria-label="dancing">🎛️🎚️🕺💃</span></p>
             <p className={styles.italics}>built by Edward Horsey</p>
             <a href="https://github.com/edwardhorsey" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={["fab", "github"]} /></a>
           </div>
