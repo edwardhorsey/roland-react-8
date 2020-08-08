@@ -1,4 +1,7 @@
 .button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 10px;
   min-width: 60px;
   width: fit-content;
@@ -10,4 +13,8 @@
   background-color: rgb(143, 149, 184);
   }
   user-select: none; 
+}
+
+.clear {
+  margin-right: 5px;
 }
