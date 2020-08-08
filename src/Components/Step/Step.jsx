@@ -10,7 +10,8 @@ class Step extends Component {
   }
 
   render() {
-    const stepStyle = this.props.loop[this.props.step] ? `${styles.step} ${styles.on}` : `${styles.step} ${styles.off}`;
+    const everyFour = (this.props.step + 1) % 4 === 0 ? styles.everyFour : '';
+    const stepStyle = this.props.loop[this.props.step] ? `${styles.step} ${styles.on} ${everyFour}` : `${styles.step} ${styles.off} ${everyFour}`;
 
     return (
     <div className={stepStyle} onClick={this.sendToLoop} name={this.props.step}>

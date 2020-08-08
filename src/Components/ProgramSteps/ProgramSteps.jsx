@@ -6,11 +6,7 @@ import Button from '../Button';
 class ProgramSteps extends Component {
   constructor(props) {
     super(props);
-    this.stepRefs = (()=>{
-      let array=[];
-      for (let i=0;i<16;i++) array.push(React.createRef());
-      return array;
-    })()
+    this.stepRefs = (() => [...Array(16).keys()].map(_ => React.createRef()))()
   }
 
   componentDidMount() {
