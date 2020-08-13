@@ -13,19 +13,23 @@ class ProgramSteps extends Component {
     this.props.storeStepRefs(this.props.title, this.stepRefs)
   }
 
-  renderSteps = (num) => {
-    let output = [];
-    for (let i=0; i<num; i++) {
-      output.push(<Step ref={this.stepRefs[i]} handleClick={this.handleClick} step={i} key={i} currentSixteenth={this.props.currentSixteenth} logic={this.updateLoop} loop={this.props.loop} group={(i+1)%4===0 ? true : false} />)
+  renderSteps = (num) => [...Array(num).keys()].map((_, i) => {
+    return (<Step ref={this.stepRefs[i]}
+      handleClick={this.handleClick}
+      step={i}
+      key={i}
+      currentSixteenth={this.props.currentSixteenth}
+      logic={this.updateLoop}
+      loop={this.props.loop}
+      group={(i+1)%4===0 ? true : false}
+      />)
     }
-
-    return output;
-  }
+  );
 
   updateLoop = (num, state) => this.props.updateLoop(num, state, this.props.title);
 
   render() { 
-    let steps =  this.renderSteps(16)
+    const steps =  this.renderSteps(16)
 
     return (
       <article className={styles.instrument}>
@@ -35,7 +39,6 @@ class ProgramSteps extends Component {
         </section>
         <Button className={styles.marginRight} text="Clear" logic={() => {this.props.clearLoop(this.props.title)}} />
         <Button text="Fill" logic={() => {this.props.fillLoop(this.props.title)}} />
-
       </article>
      );
   }
