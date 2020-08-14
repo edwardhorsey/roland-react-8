@@ -20,6 +20,8 @@ jobs:
         with:
           name: build
           path: build
+        env:
+          REACT_APP_FIREBASE_KEY: ${{ secrets.REACT_APP_FIREBASE_KEY }}
   deploy:
     name: Deploy
     needs: build

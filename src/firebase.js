@@ -5,7 +5,7 @@ import "firebase/auth";
 
   // Your web app's Firebase configuration
 firebase.initializeApp({
-    apiKey: "AIzaSyCN5jGZGj9rWLUz_i8rlayTBefJ9tzonY8",
+    apiKey: process.env.REACT_APP_FIREBASE_KEY,
     authDomain: "roland-react-8.firebaseapp.com",
     databaseURL: "https://roland-react-8.firebaseio.com",
     projectId: "roland-react-8",
