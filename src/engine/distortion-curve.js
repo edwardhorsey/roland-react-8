@@ -9,6 +9,6 @@ export const makeDistortionCurve = (amount, sampleRate) => {
       x = i * 2 / n_samples - 1;
       curve[i] = (3 + k)*Math.atan(Math.sinh(x*0.25)*5) / (Math.PI + k * Math.abs(x));
   }
-  console.log('hi')
+
   return curve;
 }

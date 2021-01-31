@@ -103,7 +103,6 @@ class App extends Component {
   scheduleNote = (beatNumber, time) => {
     const { loop, bufferLoader } = this.state;
     this.notesInQueue.push({  note: beatNumber, time: time  });
-    console.log(this.current16thNote, beatNumber, this.notesInQueue);  
     for (let prop in loop) {
       if (loop[prop][this.current16thNote]) this.playSample(bufferLoader[prop], this.gainNodes[prop], time);
     }
