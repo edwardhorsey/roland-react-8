@@ -1,0 +1,54 @@
+.ownBeats {
+  display: flex;
+  flex-direction: column;
+  p {
+    margin:3px 0;
+  }
+  .selectAndStore {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    select {
+      padding: 3px;
+      font-size: 0.9em;
+      width: 170px;
+    }
+    .pick{
+      display: flex;
+      justify-content: space-between;
+      select {
+        margin-right: 5px;
+      }
+      span {
+        font-size: 1.6em;
+        cursor: pointer;
+      }
+    }
+    .store{
+      display: flex;
+      justify-content: space-between;
+      input {
+        padding: 3px;
+        margin-right: 5px;
+        font-size: 0.9em;
+        outline: none;
+        width: 170px;
+        border: 1px solid black;
+        &:focus {
+          outline: none;
+        }
+      }
+      span {
+        font-size: 1.6em;
+        cursor: pointer;
+        &.success{
+          -webkit-animation:pulsate-fwd .5s ease-in-out 2 both;
+          animation:pulsate-fwd .5s ease-in-out 2 both;
+        }
+      }
+    }
+  }
+}
+
+
+@-webkit-keyframes pulsate-fwd{0%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(1.1);transform:scale(1.1)}100%{-webkit-transform:scale(1);transform:scale(1)}}@keyframes pulsate-fwd{0%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(1.1);transform:scale(1.1)}100%{-webkit-transform:scale(1);transform:scale(1)}}

@@ -1,0 +1,45 @@
+.instrControls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background-color: rgb(219, 214, 214);
+  border-radius: 8px;
+  margin: 10px 20px;
+  padding: 20px;
+  min-width: 1100px;
+  box-shadow: 0 1px 1px rgb(146, 146, 146) , 1px 1px 0 rgb(80, 80, 80); 
+
+
+  section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 60%;
+  }
+
+  div {
+    &.aboutMe {
+      margin-top: 10px;
+      text-align: left;
+      p {
+        &.italics {
+          font-style: italic;
+        }
+      }
+      a{
+        font-size: 1.6em;
+        color: black;
+        &:visited{
+          color: black
+        }
+      }
+    }
+    &.playButtons {
+      display: flex;
+      flex-direction: column;
+      div {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
