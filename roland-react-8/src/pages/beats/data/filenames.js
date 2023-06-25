@@ -15,11 +15,11 @@ const lotom = "/sounds/wa_808tape_lotom_01_sat.wav";
 const kick = "/sounds/wa_808tape_kick_09_sat.wav";
 
 export const filenames = {
-  Clap: clap,
-  Hat: hat,
-  "Open Hat": openhat,
-  Cymbal: crash,
-  "Hi Tom": hitom,
-  "Lo Tom": lotom,
-  Kick: kick,
+    Clap: clap,
+    Hat: hat,
+    "Open Hat": openhat,
+    Cymbal: crash,
+    "Hi Tom": hitom,
+    "Lo Tom": lotom,
+    Kick: kick,
 };
