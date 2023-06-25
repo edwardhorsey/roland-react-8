@@ -6,6 +6,7 @@ import FXButton from '../FXButton';
 import { Donut } from 'react-dial-knob'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../data/fa-library';
+import OwnBeats from '../OwnBeats';
 
 
 
@@ -94,6 +95,7 @@ class InstrumentControls extends Component {
           <FXButton text={'DISTORTION'} logic={distortionOn} dist={distorted} />
         </section>
         {/* <Hosting loop={this.props.loop} loadLoop={this.props.loadLoop} /> */}
+        <OwnBeats userBeats={[]} loop={this.props.loop} />
       </section>
      );
   }
