@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styles from "./App.module.scss";
-import { filenames } from "./data/filenames";
-import { setupSample } from "./engine/load-samples";
+import { filenames } from "../../data/filenames";
+import { setupSample } from "../../engine/load-samples";
 import {
     gainStage,
     setupGainNodes,
@@ -11,10 +11,10 @@ import {
     createDistortion,
     createDistortionPre,
     createDistortionOut,
-} from "./engine/load-audio-nodes";
+} from "../../engine/load-audio-nodes";
 
-import MachineSequencer from "./Containers/MachineSequencer";
-import MachineKnobs from "./Containers/MachineKnobs";
+import MachineSequencer from "../MachineSequencer";
+import MachineKnobs from "../MachineKnobs";
 
 class App extends Component {
     constructor(props) {

@@ -64,7 +64,7 @@ class InstrumentControls extends Component {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <FontAwesomeIcon icon={["fab", "github"]} />
+                            <FontAwesomeIcon icon={["fab", "github"]} className="text-base" />
                         </a>
                     </div>
                 </div>
