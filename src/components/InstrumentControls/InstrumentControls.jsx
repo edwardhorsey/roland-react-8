@@ -110,7 +110,7 @@ class InstrumentControls extends Component {
                     />
                 </section>
                 {/* <Hosting loop={this.props.loop} loadLoop={this.props.loadLoop} /> */}
-                <OwnBeats userBeats={[]} loop={this.props.loop} />
+                <OwnBeats loop={this.props.loop} loadLoop={this.props.loadLoop} />
             </section>
         );
     }

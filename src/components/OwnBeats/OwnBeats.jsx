@@ -14,19 +14,19 @@ export default function OwnBeats(props) {
     const selectRef = useRef();
 
     const renderOptions = () => {
-        return props.userBeats.map((beat, index) => {
+        return (data.data ?? []).map((beat, index) => {
             return (
-                <option key={index} value={beat.beatID}>
-                    {beat.beatID}
+                <option key={index} value={beat.id}>
+                    {beat.name}
                 </option>
             );
         });
     };
 
     const loadLoop = (event) => {
-        const loop = props.userBeats.find(
-            (beat) => beat.beatID === event.target.value
-        ).loop;
+        const loop = (data.data ?? []).find(
+            (beat) => beat.id === event.target.value
+        );
         props.loadLoop(loop);
     };
 
@@ -67,6 +67,9 @@ export default function OwnBeats(props) {
                         name="Your loops"
                         onChange={loadLoop}
                     >
+                        <option value={undefined}>
+                            --- Select a beat ---
+                        </option>
                         {renderOptions()}
                     </select>
                     <span>

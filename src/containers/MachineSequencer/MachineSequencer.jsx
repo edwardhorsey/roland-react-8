@@ -16,13 +16,13 @@ class MachineSequencer extends Component {
         return (
             <article className={styles.sequencer}>
                 {[
-                    "Clap",
-                    "Hat",
-                    "Open Hat",
-                    "Cymbal",
-                    "Hi Tom",
-                    "Lo Tom",
-                    "Kick",
+                    "clap",
+                    "hat",
+                    "openHat",
+                    "cymbal",
+                    "hiTom",
+                    "loTom",
+                    "kick",
                 ].map((sample, index) => {
                     return (
                         <ProgramSteps
