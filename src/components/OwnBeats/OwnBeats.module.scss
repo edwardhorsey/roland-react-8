@@ -27,6 +27,7 @@
         .store {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             input {
                 padding: 3px;
                 margin-right: 5px;
@@ -38,13 +39,15 @@
                     outline: none;
                 }
             }
-            span {
+            button {
                 font-size: 1.6em;
                 cursor: pointer;
                 &.success {
                     -webkit-animation: pulsate-fwd 0.5s ease-in-out 2 both;
                     animation: pulsate-fwd 0.5s ease-in-out 2 both;
                 }
+                width: 20px;
+                height: 20px;
             }
         }
     }
