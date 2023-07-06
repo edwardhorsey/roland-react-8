@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import styles from "./App.module.scss";
-import { filenames } from "../../data/filenames";
 import { setupSample } from "../../engine/load-samples";
 import {
     gainStage,
@@ -17,6 +16,20 @@ import MachineSequencer from "../MachineSequencer";
 import MachineKnobs from "../MachineKnobs";
 
 class App extends Component {
+    gainNodes: null | any;
+    masterGain: "";
+    mainOut;
+    stepRefs;
+    notesInQueue;
+    lastNoteDrawn;
+    lookahead;
+    scheduleAheadTime;
+    timerID;
+    unlocked;
+    tempo;
+    current16thNote;
+    nextNoteTime;
+
     constructor(props) {
         super(props);
         this.gainNodes = null;
@@ -51,27 +64,25 @@ class App extends Component {
     };
 
     async componentDidMount() {
-        let context = new AudioContext();
-        await setupSample(context, filenames)
-            .then((buffers) => {
-                this.setState({ context, bufferLoader: buffers });
-                console.log("context and sounds loaded and stored on state");
-            })
-            .then(() => {
-                const gainNodes= setupGainNodes(context, filenames);
-                this.gainNodes = gainNodes
-                this.mainDryOut = createMainDryOut(context);
-                this.masterGain = createMasterGain(context);
-            })
-            .then(() => {
-                this.distortion = createDistortion(context);
-                this.distortionPre = createDistortionPre(context);
-                this.distortionOut = createDistortionOut(context);
-            })
-            .then(() => {
-                this.limiter = createLimiter(context);
-            })
-            .catch((err) => console.log(err));
+        try {
+            const context = new AudioContext();
+
+            const buffers = await setupSample(context);
+            this.setState({ context, bufferLoader: buffers });
+            console.log("context and sounds loaded and stored on state");
+
+            this.gainNodes = setupGainNodes(context);
+            this.mainDryOut = createMainDryOut(context);
+            this.masterGain = createMasterGain(context);
+
+            this.distortion = createDistortion(context);
+            this.distortionPre = createDistortionPre(context);
+            this.distortionOut = createDistortionOut(context);
+
+            this.limiter = createLimiter(context);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     nextNote = () => {

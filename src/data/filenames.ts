@@ -6,4 +6,12 @@ const hiTom = "/sounds/wa_808tape_hitom_01_sat.wav";
 const loTom = "/sounds/wa_808tape_lotom_01_sat.wav";
 const kick = "/sounds/wa_808tape_kick_09_sat.wav";
 
-export const filenames = { clap, hat, openHat, crash, hiTom, loTom, kick };
+export const filenames = {
+    clap,
+    hat,
+    openHat,
+    crash,
+    hiTom,
+    loTom,
+    kick,
+} as const;

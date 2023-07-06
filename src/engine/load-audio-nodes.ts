@@ -1,3 +1,4 @@
+import { filenames } from "~/data/filenames";
 import { makeDistortionCurve } from "./distortion-curve";
 
 export const gainStage = {
@@ -9,11 +10,11 @@ export const gainStage = {
     hiTom: 1,
     loTom: 1,
     kick: 1,
-};
+} as const;
 
-export const setupGainNodes = (audiocontext, files) => {
-    let obj = {};
-    for (let prop in files) {
+export const setupGainNodes = (audiocontext: AudioContext) => {
+    const obj = {};
+    for (const prop in filenames) {
         const gain = audiocontext.createGain();
         obj[prop] = gain;
         obj[prop].gain.value = parseFloat(`${0.7 * gainStage[prop]}`); // 0.7 is starting volume on all knobs
@@ -21,37 +22,37 @@ export const setupGainNodes = (audiocontext, files) => {
     return obj;
 };
 
-export const createMainDryOut = (audiocontext) => {
+export const createMainDryOut = (audiocontext: AudioContext) => {
     return audiocontext.createGain();
 };
 
-export const createMasterGain = (audiocontext) => {
-    let masterGain = audiocontext.createGain();
+export const createMasterGain = (audiocontext: AudioContext) => {
+    const masterGain = audiocontext.createGain();
     masterGain.gain.value = 0.8 * gainStage["Master"];
     return masterGain;
 };
 
-export const createDistortion = (audiocontext) => {
-    let distortion = audiocontext.createWaveShaper();
+export const createDistortion = (audiocontext: AudioContext) => {
+    const distortion = audiocontext.createWaveShaper();
     distortion.curve = makeDistortionCurve(20, 48000);
     distortion.oversample = "2x";
     return distortion;
 };
 
-export const createDistortionPre = (audiocontext) => {
-    let distortionPre = audiocontext.createGain();
+export const createDistortionPre = (audiocontext: AudioContext) => {
+    const distortionPre = audiocontext.createGain();
     distortionPre.gain.value = 0.3;
     return distortionPre;
 };
 
-export const createDistortionOut = (audiocontext) => {
-    let distortionOut = audiocontext.createGain();
+export const createDistortionOut = (audiocontext: AudioContext) => {
+    const distortionOut = audiocontext.createGain();
     distortionOut.gain.value = 0.7;
     return distortionOut;
 };
 
-export const createLimiter = (audiocontext) => {
-    let limiter = audiocontext.createDynamicsCompressor();
+export const createLimiter = (audiocontext: AudioContext) => {
+    const limiter = audiocontext.createDynamicsCompressor();
     limiter.threshold.value = 0.0;
     limiter.knee.value = 0.0;
     limiter.ratio.value = 20.0;
