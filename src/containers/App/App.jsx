@@ -19,7 +19,7 @@ import MachineKnobs from "../MachineKnobs";
 class App extends Component {
     constructor(props) {
         super(props);
-        this.gainNodes = "";
+        this.gainNodes = null;
         this.masterGain = "";
         this.mainOut = "";
         this.stepRefs = {};
@@ -58,17 +58,18 @@ class App extends Component {
                 console.log("context and sounds loaded and stored on state");
             })
             .then(() => {
-                this.gainNodes = setupGainNodes(this.state.context, filenames);
-                this.mainDryOut = createMainDryOut(this.state.context);
-                this.masterGain = createMasterGain(this.state.context);
+                const gainNodes= setupGainNodes(context, filenames);
+                this.gainNodes = gainNodes
+                this.mainDryOut = createMainDryOut(context);
+                this.masterGain = createMasterGain(context);
             })
             .then(() => {
-                this.distortion = createDistortion(this.state.context);
-                this.distortionPre = createDistortionPre(this.state.context);
-                this.distortionOut = createDistortionOut(this.state.context);
+                this.distortion = createDistortion(context);
+                this.distortionPre = createDistortionPre(context);
+                this.distortionOut = createDistortionOut(context);
             })
             .then(() => {
-                this.limiter = createLimiter(this.state.context);
+                this.limiter = createLimiter(context);
             })
             .catch((err) => console.log(err));
     }
@@ -142,6 +143,7 @@ class App extends Component {
 
     start = () => {
         if (!this.unlocked) {
+            this.state.context.resume();
             var buffer = this.state.context.createBuffer(1, 1, 22050);
             var node = this.state.context.createBufferSource();
             node.buffer = buffer;

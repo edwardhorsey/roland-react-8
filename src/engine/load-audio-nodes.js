@@ -2,13 +2,13 @@ import { makeDistortionCurve } from "./distortion-curve";
 
 export const gainStage = {
     Master: 0.8,
-    Clap: 0.9,
-    Hat: 0.9,
-    "Open Hat": 0.8,
-    Cymbal: 0.7,
-    "Hi Tom": 1,
-    "Lo Tom": 1,
-    Kick: 1,
+    clap: 0.9,
+    hat: 0.9,
+    openHat: 0.8,
+    crash: 0.7,
+    hiTom: 1,
+    loTom: 1,
+    kick: 1,
 };
 
 export const setupGainNodes = (audiocontext, files) => {
@@ -16,7 +16,7 @@ export const setupGainNodes = (audiocontext, files) => {
     for (let prop in files) {
         const gain = audiocontext.createGain();
         obj[prop] = gain;
-        obj[prop].gain.value = 0.7 * gainStage[prop]; // 0.7 is starting volume on all knobs
+        obj[prop].gain.value = parseFloat(`${0.7 * gainStage[prop]}`); // 0.7 is starting volume on all knobs
     }
     return obj;
 };

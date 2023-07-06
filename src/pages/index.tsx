@@ -3,7 +3,12 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { api } from "~/utils/api";
-import App from "../containers/App";
+
+import dynamic from "next/dynamic";
+
+const App = dynamic(() => import("../containers/App"), {
+    ssr: false,
+});
 
 const Home: NextPage = () => {
     const hello = api.example.hello.useQuery({ text: "from tRPC" });
