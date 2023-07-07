@@ -129,7 +129,7 @@ class App extends Component {
             this.notesInQueue.splice(0, 1);
         }
         if (this.lastNoteDrawn !== drawNote) {
-            for (let prop in this.stepRefs) {
+            for (const prop in this.stepRefs) {
                 this.stepRefs[prop][
                     this.lastNoteDrawn
                 ].current.style.backgroundColor = "";
@@ -172,7 +172,7 @@ class App extends Component {
         window.clearTimeout(this.timerID);
         this.current16thNote = 0;
         setTimeout(() => {
-            for (let prop in this.stepRefs) {
+            for (const prop in this.stepRefs) {
                 this.stepRefs[prop].forEach(
                     (ref) => (ref.current.style.backgroundColor = "")
                 );

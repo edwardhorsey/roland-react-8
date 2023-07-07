@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 import styles from "./InstrumentControls.module.scss";
-import Button from "../Button";
+import Button from "../Button/index";
 import FXButton from "../FXButton";
 // import Hosting from '../Hosting';
 import { Donut } from "react-dial-knob";
@@ -123,8 +123,6 @@ function InstrumentControls({
                     dist={distorted}
                 />
             </section>
-            {/* <Hosting loop={props.loop} loadLoop={props.loadLoop} /> */}
-
             {sessionData ? (
                 <OwnBeats loop={loop} loadLoop={loadLoop} />
             ) : (

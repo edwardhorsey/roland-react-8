@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Step from "../Step";
 import styles from "./ProgramSteps.module.scss";
-import Button from "../Button";
+import Button from "../Button/index.ts";
 
 class ProgramSteps extends Component {
     constructor(props) {

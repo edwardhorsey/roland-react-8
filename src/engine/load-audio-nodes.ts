@@ -1,5 +1,6 @@
 import { filenames } from "~/data/filenames";
 import { makeDistortionCurve } from "./distortion-curve";
+import { getObjectKeysUnsafe } from "~/data/helpers";
 
 export const gainStage = {
     Master: 0.8,
@@ -13,12 +14,14 @@ export const gainStage = {
 } as const;
 
 export const setupGainNodes = (audiocontext: AudioContext) => {
-    const obj = {};
-    for (const prop in filenames) {
+    const obj: Partial<Record<keyof typeof filenames, GainNode>> = {};
+
+    for (const prop of getObjectKeysUnsafe(filenames)) {
         const gain = audiocontext.createGain();
+        gain.gain.value = parseFloat(`${0.7 * gainStage[prop]}`); // 0.7 is starting volume on all knobs
         obj[prop] = gain;
-        obj[prop].gain.value = parseFloat(`${0.7 * gainStage[prop]}`); // 0.7 is starting volume on all knobs
     }
+
     return obj;
 };
 
