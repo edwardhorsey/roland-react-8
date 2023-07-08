@@ -34,13 +34,13 @@ class MachineKnobs extends Component {
                 </article>
                 <article className={styles.sampleControls}>
                     {[
-                        "Clap",
-                        "Hat",
-                        "Open Hat",
-                        "Cymbal",
-                        "Hi Tom",
-                        "Lo Tom",
-                        "Kick",
+                        "clap",
+                        "hat",
+                        "openHat",
+                        "cymbal",
+                        "hiTom",
+                        "loTom",
+                        "kick",
                     ].map((sample, index) => {
                         return (
                             <SampleControls

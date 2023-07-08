@@ -212,6 +212,7 @@ class App extends Component {
     loadLoop = (loop) => this.setState({ loop });
 
     updateGain = (instr, value) => {
+        console.log(instr, value);
         if (this.gainNodes) {
             let newValue = (gainStage[instr] * value) / 100;
             this.gainNodes[instr].gain.value = newValue;

@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 import styles from "./InstrumentControls.module.scss";
-import Button from "../Button/index";
+import Button from "../Button/Button";
 import FXButton from "../FXButton";
 // import Hosting from '../Hosting';
 import { Donut } from "react-dial-knob";

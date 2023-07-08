@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Step from "../Step";
 import styles from "./ProgramSteps.module.scss";
-import Button from "../Button/index.ts";
+import Button from "../Button";
 
 class ProgramSteps extends Component {
     constructor(props) {
@@ -18,8 +18,8 @@ class ProgramSteps extends Component {
         [...Array(num).keys()].map((_, i) => {
             return (
                 <Step
-                    ref={this.stepRefs[i]}
-                    handleClick={this.handleClick}
+                    stepRef={this.stepRefs[i]}
+                    // handleClick={this.handleClick}
                     step={i}
                     key={i}
                     currentSixteenth={this.props.currentSixteenth}

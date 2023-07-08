@@ -1,7 +1,4 @@
-import React from "react";
-import styles from "./FXButton.module.scss";
-
-function FXButton({
+export default function FXButton({
     dist,
     logic,
     text,
@@ -11,17 +8,15 @@ function FXButton({
     text: string;
 }) {
     return (
-        <div
-            className={
+        <button
+            className={`flex h-16 select-none appearance-none items-center justify-center p-2.5 shadow-lg outline-none ${
                 dist
-                    ? `${styles.FXButton ?? ""} ${styles.on ?? ""}`
-                    : `${styles.FXButton ?? ""} ${styles.off ?? ""}`
-            }
+                    ? "bg-red-300 hover:bg-red-400"
+                    : "bg-gray-200 hover:bg-gray-300"
+            }`}
             onClick={logic}
         >
             <h3>{text}</h3>
-        </div>
+        </button>
     );
 }
-
-export default FXButton;
