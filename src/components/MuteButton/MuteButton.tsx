@@ -9,7 +9,7 @@ export default function MuteButton({
 }) {
     return (
         <div
-            className={`user-select-none flex cursor-pointer appearance-none flex-col justify-center p-2.5 shadow-lg outline-none ${
+            className={`user-select-none flex cursor-pointer appearance-none flex-col justify-center p-2.5 shadow-md outline-none ${
                 muted
                     ? "bg-red-300 hover:bg-red-400"
                     : "bg-emerald-600 hover:bg-emerald-700"

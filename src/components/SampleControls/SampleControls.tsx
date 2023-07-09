@@ -34,7 +34,7 @@ export default function SampleControls({
 
     return (
         <article
-            className={`flex flex-col rounded-lg bg-gray-100 p-5 shadow-lg`}
+            className={`flex flex-col rounded-lg bg-gray-300 p-5 shadow-sm`}
         >
             <div className="mx-auto">
                 <Donut

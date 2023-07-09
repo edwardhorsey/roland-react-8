@@ -1,13 +1,12 @@
-import React, { Component, useState } from "react";
-import styles from "./InstrumentControls.module.scss";
+import React, { useState } from "react";
 import Button from "../Button/Button";
 import FXButton from "../FXButton";
-// import Hosting from '../Hosting';
 import { Donut } from "react-dial-knob";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../data/fa-library";
 import OwnBeats from "../OwnBeats";
 import { signIn, signOut, useSession } from "next-auth/react";
+import type { Beat } from "@prisma/client";
 
 function InstrumentControls({
     stop,
@@ -19,7 +18,17 @@ function InstrumentControls({
     distorted,
     loop,
     loadLoop,
-}: any) {
+}: {
+    stop: () => void;
+    start: () => void;
+    reset: () => void;
+    updateTempo: (tempo: number) => void;
+    updateMaster: (master: number) => void;
+    distortionOn: () => void;
+    distorted: boolean;
+    loop: Beat;
+    loadLoop: (loop: Beat) => void;
+}) {
     const [state, setState] = useState({
         tempo: 130,
         master: 80,
@@ -39,12 +48,12 @@ function InstrumentControls({
         reset();
     };
 
-    const handleTempoChange = (tempo) => {
+    const handleTempoChange = (tempo: number) => {
         setState({ ...state, tempo });
         updateTempo(tempo);
     };
 
-    const handlemMsterChange = (master) => {
+    const handlemMsterChange = (master: number) => {
         setState({ ...state, master });
         updateMaster(master);
     };
@@ -58,32 +67,33 @@ function InstrumentControls({
     );
 
     return (
-        <section className={styles.instrControls}>
+        <section className="mx-5 my-2.5 flex min-w-[1100px] justify-evenly rounded-lg bg-gray-100 p-5 shadow-sm">
             <div>
                 <h2>Roland-React-8</h2>
                 <h3>Instrument Controls</h3>
-                <div className={styles.aboutMe}>
+                <div className="mt-2.5 text-left">
                     <p>
                         {" "}
                         <span role="img" aria-label="dancing">
                             🎛️🎚️🕺💃
                         </span>
                     </p>
-                    <p className={styles.italics}>built by Edward Horsey</p>
+                    <p className="italic">built by Edward Horsey</p>
                     <a
                         href="https://github.com/edwardhorsey"
                         target="_blank"
                         rel="noopener noreferrer"
+                        className="text-2xl text-black visited:text-black "
                     >
                         <FontAwesomeIcon
                             icon={["fab", "github"]}
-                            className="text-base"
+                            className="h-6 w-6 text-base"
                         />
                     </a>
                 </div>
             </div>
-            <section className={styles.instrKnobs}>
-                <div className={styles.playButtons}>
+            <section className="flex w-3/5 justify-evenly">
+                <div className="flex w-16 flex-col gap-2.5">
                     {playButton}
                     <Button text={"Stop"} logic={handleReset} />
                 </div>
@@ -124,9 +134,21 @@ function InstrumentControls({
                 />
             </section>
             {sessionData ? (
-                <OwnBeats loop={loop} loadLoop={loadLoop} />
+                <OwnBeats
+                    loop={loop}
+                    loadLoop={loadLoop}
+                    deletePattern={() => console.log("delete")}
+                />
             ) : (
-                <button onClick={signIn}>sign in</button>
+                <Button
+                    logic={() => {
+                        console.log("hi");
+                        signIn()
+                            .then((res) => console.log(res))
+                            .catch((err) => console.log(err));
+                    }}
+                    text="sign in"
+                />
             )}
         </section>
     );
