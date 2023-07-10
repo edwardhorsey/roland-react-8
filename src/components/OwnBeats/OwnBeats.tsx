@@ -1,31 +1,30 @@
-import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import type { SyntheticEvent } from "react";
 import styles from "./OwnBeats.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../data/fa-library";
 import { api } from "~/utils/api";
-import { Beat } from "@prisma/client";
+import type { Beat } from "@prisma/client";
 
 export default function OwnBeats({
     loadLoop,
     loop,
-    deletePattern,
 }: {
     loadLoop: (loop: Beat) => void;
     loop: Beat;
-    deletePattern: (id: string) => void;
 }) {
     const [state, setState] = useState({ iconClass: false, beatName: "" });
 
     const data = api.beats.getUserBeats.useQuery();
-    console.log(data);
     const saveBeat = api.beats.saveUserBeat.useMutation();
-    console.log(saveBeat);
+    const deleteBeat = api.beats.deleteUserBeat.useMutation();
+    const userBeats = data.data ?? [];
 
     const inputRef = useRef<HTMLInputElement>(null);
     const selectRef = useRef<HTMLSelectElement>(null);
 
     const renderOptions = () => {
-        return (data.data ?? []).map((beat, index) => {
+        return userBeats.map((beat, index) => {
             return (
                 <option key={index} value={beat.id}>
                     {beat.name}
@@ -38,7 +37,7 @@ export default function OwnBeats({
         const beatId = event.currentTarget.value;
 
         if (beatId) {
-            const loop = (data.data ?? []).find((beat) => beat.id === beatId);
+            const loop = userBeats.find((beat) => beat.id === beatId);
 
             if (loop) {
                 loadLoop(loop);
@@ -81,8 +80,24 @@ export default function OwnBeats({
         }
     }, [saveBeatSuccess]);
 
-    const handleDeletePattern = () =>
-        selectRef.current && deletePattern(selectRef.current.value);
+    const handleDeletePattern = () => {
+        const select = selectRef.current;
+
+        if (select) {
+            const beatId = select.value;
+
+            if (beatId) {
+                deleteBeat.mutate(
+                    { id: beatId },
+                    {
+                        onSuccess: () => {
+                            void data.refetch();
+                        },
+                    }
+                );
+            }
+        }
+    };
 
     return (
         <div className={styles.ownBeats}>

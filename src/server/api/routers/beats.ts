@@ -33,4 +33,17 @@ export const beatsRouter = createTRPCRouter({
                 },
             });
         }),
+    deleteUserBeat: protectedProcedure
+        .input(
+            z.object({
+                id: z.string(),
+            })
+        )
+        .mutation(({ ctx, input }) => {
+            return ctx.prisma.beat.delete({
+                where: {
+                    id: input.id,
+                },
+            });
+        }),
 });

@@ -134,15 +134,10 @@ function InstrumentControls({
                 />
             </section>
             {sessionData ? (
-                <OwnBeats
-                    loop={loop}
-                    loadLoop={loadLoop}
-                    deletePattern={() => console.log("delete")}
-                />
+                <OwnBeats loop={loop} loadLoop={loadLoop} />
             ) : (
                 <Button
                     logic={() => {
-                        console.log("hi");
                         signIn()
                             .then((res) => console.log(res))
                             .catch((err) => console.log(err));
