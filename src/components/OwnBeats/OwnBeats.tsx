@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import type { SyntheticEvent } from "react";
-import styles from "./OwnBeats.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../data/fa-library";
 import { api } from "~/utils/api";
@@ -100,34 +99,39 @@ export default function OwnBeats({
     };
 
     return (
-        <div className={styles.ownBeats}>
-            <div className={styles.selectAndStore}>
+        <div className="flex flex-col">
+            <div className="flex flex-col justify-evenly">
                 <p>Select a beat to load</p>
-                <div className={styles.pick}>
+                <div className="flex justify-between">
                     <select
                         ref={selectRef}
                         name="Your loops"
                         onChange={handleLoadLoop}
+                        className="mr-1.5 w-40 p-1 text-sm"
                     >
                         <option value={undefined}>--- Select a beat ---</option>
                         {renderOptions()}
                     </select>
-                    <span onClick={handleDeletePattern}>
+                    <button
+                        onClick={handleDeletePattern}
+                        className="appearance-none text-2xl outline-none"
+                    >
                         <FontAwesomeIcon icon={["fas", "trash-alt"]} />
-                    </span>
+                    </button>
                 </div>
-                <p>Save your beat</p>
-                <div className={styles.store}>
+                <p className="my-1">Save your beat</p>
+                <div className="flex items-center justify-between">
                     <input
                         ref={inputRef}
                         type="text"
                         placeholder="Name your beat"
                         required
                         onChange={storeName}
+                        className="mr=1 w-40 appearance-none border border-gray-900 p-1 text-sm outline-none focus:outline-none"
                     />
                     <button
                         type="button"
-                        className={state.iconClass ? styles.success : ""}
+                        className="text-2xl"
                         onClick={saveLoop}
                     >
                         <FontAwesomeIcon icon={["fas", "save"]} />
