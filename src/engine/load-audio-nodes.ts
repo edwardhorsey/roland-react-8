@@ -1,28 +1,32 @@
-import { filenames } from "~/data/filenames";
 import { makeDistortionCurve } from "./distortion-curve";
-import { getObjectKeysUnsafe } from "~/data/helpers";
 
 export const gainStage = {
     Master: 0.8,
     clap: 0.9,
     hat: 0.9,
     openHat: 0.8,
-    crash: 0.7,
+    cymbal: 0.7,
     hiTom: 1,
     loTom: 1,
     kick: 1,
 } as const;
 
 export const setupGainNodes = (audiocontext: AudioContext) => {
-    const obj: Partial<Record<keyof typeof filenames, GainNode>> = {};
-
-    for (const prop of getObjectKeysUnsafe(filenames)) {
+    const createGainNode = (startingValue: number) => {
         const gain = audiocontext.createGain();
-        gain.gain.value = parseFloat(`${0.7 * gainStage[prop]}`); // 0.7 is starting volume on all knobs
-        obj[prop] = gain;
-    }
+        gain.gain.value = parseFloat(`${0.7 * startingValue}`); // 0.7 is starting volume on all knobs
+        return gain;
+    };
 
-    return obj;
+    return {
+        clap: createGainNode(gainStage["clap"]),
+        hat: createGainNode(gainStage["hat"]),
+        openHat: createGainNode(gainStage["openHat"]),
+        cymbal: createGainNode(gainStage["cymbal"]),
+        hiTom: createGainNode(gainStage["hiTom"]),
+        loTom: createGainNode(gainStage["loTom"]),
+        kick: createGainNode(gainStage["kick"]),
+    };
 };
 
 export const createMainDryOut = (audiocontext: AudioContext) => {
