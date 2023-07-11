@@ -67,7 +67,7 @@ function InstrumentControls({
     );
 
     return (
-        <section className="mx-5 my-2.5 flex min-w-[1100px] justify-evenly rounded-lg bg-gray-100 p-5 shadow-sm">
+        <section className="flex min-w-[1100px] justify-evenly rounded-lg bg-gray-100 p-5 shadow-sm">
             <div>
                 <h2>Roland-React-8</h2>
                 <h3>Instrument Controls</h3>

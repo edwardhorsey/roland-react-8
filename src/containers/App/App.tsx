@@ -229,7 +229,7 @@ class App extends Component {
 
     render() {
         return (
-            <div className={styles.app}>
+            <div className={`${styles.app ?? ""} gap-5 p-5`}>
                 <MachineKnobs
                     updateTempo={this.updateTempo}
                     updateMaster={this.updateMaster}

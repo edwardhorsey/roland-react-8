@@ -22,7 +22,6 @@ class ProgramSteps extends Component {
                     // handleClick={this.handleClick}
                     step={i}
                     key={i}
-                    currentSixteenth={this.props.currentSixteenth}
                     logic={this.updateLoop}
                     loop={this.props.loop}
                     group={(i + 1) % 4 === 0 ? true : false}
