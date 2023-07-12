@@ -32,11 +32,11 @@ interface Engine {
         | Record<Track, React.MutableRefObject<HTMLDivElement | null>[]>
         | undefined;
     notesInQueue: { note: number; time: number }[];
-    lastNoteDrawn: string;
-    lookahead: string;
-    scheduleAheadTime: string;
-    timerID: string;
-    unlocked: string;
+    lastNoteDrawn: number;
+    lookahead: number;
+    scheduleAheadTime: number;
+    timerID: number | undefined;
+    unlocked: boolean;
     tempo: number;
     current16thNote: number;
     nextNoteTime: number;
@@ -90,7 +90,7 @@ function App() {
                 lastNoteDrawn: 0,
                 lookahead: 25.0,
                 scheduleAheadTime: 0.2,
-                timerID: "",
+                timerID: undefined,
                 unlocked: false,
                 tempo: 130,
                 current16thNote: 0,
@@ -162,10 +162,11 @@ function App() {
             return;
 
         let drawNote = engine.current.lastNoteDrawn;
-        let currentTime = state.context.currentTime;
+        const currentTime = state.context.currentTime;
 
         while (
             engine.current.notesInQueue.length &&
+            engine.current.notesInQueue[0] &&
             engine.current.notesInQueue[0].time < currentTime
         ) {
             drawNote = engine.current.notesInQueue[0].note;
@@ -173,58 +174,89 @@ function App() {
         }
 
         if (engine.current.lastNoteDrawn !== drawNote) {
-            for (const prop of engine.current.stepRefs) {
+            for (const prop of getObjectKeysUnsafe(engine.current.stepRefs)) {
+                const stepRef = engine.current.stepRefs[prop];
                 const lastNoteDrawn = engine.current.lastNoteDrawn;
 
-                engine.current.stepRefs[prop][
-                    lastNoteDrawn
-                ].current.style.backgroundColor = "";
-                engine.current.stepRefs[prop][
-                    drawNote
-                ].current.style.backgroundColor = "rgba(241, 241, 241, 0.3)";
+                if (stepRef) {
+                    const previous = stepRef[lastNoteDrawn]?.current;
+
+                    if (previous) {
+                        previous.style.backgroundColor = "";
+                    }
+
+                    const next = stepRef[drawNote]?.current;
+
+                    if (next) {
+                        next.style.backgroundColor = "rgba(241, 241, 241, 0.3)";
+                    }
+                }
             }
 
             engine.current.lastNoteDrawn = drawNote;
         }
 
-        requestAnimationFrame(this.draw);
+        requestAnimationFrame(draw);
     };
 
     const scheduler = () => {
+        if (!engine.current || !state.context) return;
+
         while (
-            this.nextNoteTime <
-            this.state.context.currentTime + this.scheduleAheadTime
+            engine.current.nextNoteTime <
+            state.context.currentTime + engine.current.scheduleAheadTime
         ) {
-            this.scheduleNote(this.current16thNote, this.nextNoteTime);
-            this.nextNote();
+            scheduleNote(
+                engine.current.current16thNote,
+                engine.current.nextNoteTime
+            );
+            nextNote();
         }
-        this.timerID = window.setTimeout(this.scheduler, this.lookahead);
+        engine.current.timerID = window.setTimeout(
+            scheduler,
+            engine.current.lookahead
+        );
     };
 
-    const start = () => {
-        if (!this.unlocked) {
-            this.state.context.resume();
-            var buffer = this.state.context.createBuffer(1, 1, 22050);
-            var node = this.state.context.createBufferSource();
+    const start = async () => {
+        if (!engine.current || !state.context) return;
+
+        if (!engine.current.unlocked) {
+            await state.context.resume();
+            const buffer = state.context.createBuffer(1, 1, 22050);
+            const node = state.context.createBufferSource();
             node.buffer = buffer;
             node.start(0);
-            this.unlocked = true;
+            engine.current.unlocked = true;
         }
-        this.nextNoteTime = this.state.context.currentTime; // Important: takes time from when you start scheduling the sequencing
-        this.scheduler();
-        requestAnimationFrame(this.draw);
+        engine.current.nextNoteTime = state.context.currentTime; // Important: takes time from when you start scheduling the sequencing
+        scheduler();
+        requestAnimationFrame(draw);
     };
 
-    const stop = () => window.clearTimeout(this.timerID);
+    const stop = () => {
+        if (!engine.current) return;
+
+        window.clearTimeout(engine.current.timerID);
+    };
 
     const reset = () => {
-        window.clearTimeout(this.timerID);
-        this.current16thNote = 0;
+        if (!engine.current) return;
+
+        window.clearTimeout(engine.current.timerID);
+        engine.current.current16thNote = 0;
+
         setTimeout(() => {
-            for (const prop in this.stepRefs) {
-                this.stepRefs[prop].forEach(
-                    (ref) => (ref.current.style.backgroundColor = "")
-                );
+            if (!engine.current?.stepRefs) return;
+
+            for (const prop of getObjectKeysUnsafe(engine.current.stepRefs)) {
+                const stepRef = engine.current.stepRefs?.[prop];
+
+                if (stepRef) {
+                    stepRef.forEach((ref) => {
+                        if (ref.current) ref.current.style.backgroundColor = "";
+                    });
+                }
             }
         }, 250);
     };
