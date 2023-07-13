@@ -16,7 +16,7 @@ export default function FXButton({
             }`}
             onClick={logic}
         >
-            <h3>{text}</h3>
+            <h3 className="text-xl font-bold">{text}</h3>
         </button>
     );
 }

@@ -3,6 +3,8 @@ import InstrumentControls from "../../Components/InstrumentControls";
 import SampleControls from "../../Components/SampleControls";
 import type { Beat } from "@prisma/client";
 import { tracks } from "~/data/tracks";
+import type { Track } from "~/data/tracks";
+import type { Loop } from "../App/App";
 
 export default function MachineKnobs({
     updateTempo,
@@ -18,13 +20,13 @@ export default function MachineKnobs({
 }: {
     updateTempo: (tempo: number) => void;
     updateMaster: (master: number) => void;
-    start: () => void;
+    start: () => Promise<void>;
     stop: () => void;
     reset: () => void;
-    updateGain: (title: string, gain: number) => void;
+    updateGain: (title: Track, gain: number) => void;
     distortionOn: () => void;
     distorted: boolean;
-    loop: Beat;
+    loop: Loop;
     loadLoop: (loop: Beat) => void;
 }) {
     return (

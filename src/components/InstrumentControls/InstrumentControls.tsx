@@ -5,8 +5,9 @@ import { Donut } from "react-dial-knob";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../data/fa-library";
 import OwnBeats from "../OwnBeats";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import type { Beat } from "@prisma/client";
+import type { Loop } from "~/containers/App/App";
 
 function InstrumentControls({
     stop,
@@ -20,13 +21,13 @@ function InstrumentControls({
     loadLoop,
 }: {
     stop: () => void;
-    start: () => void;
+    start: () => Promise<void>;
     reset: () => void;
     updateTempo: (tempo: number) => void;
     updateMaster: (master: number) => void;
     distortionOn: () => void;
     distorted: boolean;
-    loop: Beat;
+    loop: Loop;
     loadLoop: (loop: Beat) => void;
 }) {
     const [state, setState] = useState({
@@ -38,8 +39,8 @@ function InstrumentControls({
 
     const { data: sessionData } = useSession();
 
-    const playPause = () => {
-        state.isPlaying ? stop() : start();
+    const playPause = async () => {
+        state.isPlaying ? stop() : await start();
         setState({ ...state, isPlaying: !state.isPlaying });
     };
 
@@ -69,8 +70,8 @@ function InstrumentControls({
     return (
         <section className="flex min-w-[1100px] justify-evenly rounded-lg bg-gray-100 p-5 shadow-sm">
             <div>
-                <h2>Roland-React-8</h2>
-                <h3>Instrument Controls</h3>
+                <h2 className="text-2xl font-bold">Roland-React-8</h2>
+                <h3 className="text-xl font-bold">Instrument Controls</h3>
                 <div className="mt-2.5 text-left">
                     <p>
                         {" "}

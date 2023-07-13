@@ -37,7 +37,7 @@ class ProgramSteps extends Component {
 
         return (
             <article className={styles.instrument}>
-                <h3>{this.props.title}</h3>
+                <h3 className="text-xl font-bold">{this.props.title}</h3>
                 <section>{steps}</section>
                 <Button
                     className={styles.marginRight}

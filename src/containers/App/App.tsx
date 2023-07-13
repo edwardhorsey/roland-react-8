@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./App.module.scss";
+import type { MutableRefObject } from "react";
 import { setupSample } from "../../engine/load-samples";
 import {
     gainStage,
@@ -17,7 +17,7 @@ import MachineKnobs from "../MachineKnobs";
 import { getObjectKeysUnsafe } from "~/data/helpers";
 import type { Track } from "~/data/tracks";
 
-type Loop = Record<Track, number[]>;
+export type Loop = Record<Track, number[]>;
 
 interface Engine {
     gainNodes: Record<Track, GainNode>;
@@ -262,54 +262,67 @@ function App() {
     };
 
     const distortionOn = () => {
-        if (!this.state.distortionOn) {
-            this.distortionOut.gain.value = 0.7;
-            this.mainDryOut.gain.value = 0;
+        if (!engine.current) return;
+
+        if (!state.distortionOn) {
+            engine.current.distortionOut.gain.value = 0.7;
+            engine.current.mainDryOut.gain.value = 0;
         } else {
-            this.distortionOut.gain.value = 0;
-            this.mainDryOut.gain.value = 1;
+            engine.current.distortionOut.gain.value = 0;
+            engine.current.mainDryOut.gain.value = 1;
         }
-        this.setState({ distortionOn: !this.state.distortionOn });
+
+        setState({ ...state, distortionOn: !state.distortionOn });
     };
 
-    const updateLoop = (num, state, instr) => {
-        const newSequence = this.state.loop;
-        newSequence[instr][Number(num)] = state ? 1 : 0;
-        this.setState({ loop: newSequence });
+    const updateLoop = (num: number, onOrOff: 0 | 1, instr: Track) => {
+        const newSequence = state.loop;
+        newSequence[instr][Number(num)] = onOrOff ? 1 : 0;
+        setState({ ...state, loop: newSequence });
     };
 
-    const clearLoop = (instr) => {
-        const newSequence = this.state.loop;
+    const clearLoop = (instr: Track) => {
+        const newSequence = state.loop;
         newSequence[instr] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        this.setState({ loop: newSequence });
+        setState({ ...state, loop: newSequence });
     };
 
-    const fillLoop = (instr) => {
-        const newSequence = this.state.loop;
+    const fillLoop = (instr: Track) => {
+        const newSequence = state.loop;
         newSequence[instr] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-        this.setState({ loop: newSequence });
+        setState({ ...state, loop: newSequence });
     };
 
-    const loadLoop = (loop) => this.setState({ loop });
+    const loadLoop = (loop: Loop) => setState({ ...state, loop });
 
-    const updateGain = (instr, value) => {
+    const updateGain = (instr: Track, value: number) => {
         console.log(instr, value);
-        if (this.gainNodes) {
-            let newValue = (gainStage[instr] * value) / 100;
-            this.gainNodes[instr].gain.value = newValue;
+        if (engine.current?.gainNodes) {
+            const newValue = (gainStage[instr] * value) / 100;
+            engine.current.gainNodes[instr].gain.value = newValue;
         }
     };
 
-    const updateMaster = (value) => {
-        if (this.masterGain) this.masterGain.gain.value = value / 100;
+    const updateMaster = (value: number) => {
+        if (engine.current?.masterGain)
+            engine.current.masterGain.gain.value = value / 100;
     };
 
-    const updateTempo = (newTempo) => (this.tempo = newTempo);
+    const updateTempo = (newTempo: number) => {
+        if (engine.current) engine.current.tempo = newTempo;
+    };
 
-    const storeStepRefs = (title, array) => (this.stepRefs[title] = array);
+    const storeStepRefs = (
+        title: Track,
+        array: MutableRefObject<HTMLDivElement>[]
+    ) => {
+        if (engine.current?.stepRefs) {
+            engine.current.stepRefs[title] = array;
+        }
+    };
 
     return (
-        <div className={`${styles.app ?? ""} gap-5 p-5`}>
+        <div className="flex flex-col gap-5 bg-green-800 p-5">
             <MachineKnobs
                 updateTempo={updateTempo}
                 updateMaster={updateMaster}
