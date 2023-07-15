@@ -19,17 +19,13 @@ export default function ProgramSteps({
     ) => void;
     clearLoop: (title: Track) => void;
     fillLoop: (title: Track) => void;
-    updateLoop: (step: number, newState: 0 | 1) => void;
+    updateLoop: (step: number, newState: 0 | 1, title: Track) => void;
     loop: number[];
 }) {
     const stepRefs = useRef<HTMLDivElement[]>([]);
 
     useEffect(() => {
         storeStepRefs(title, stepRefs);
-
-        setTimeout(() => {
-            console.log(stepRefs.current);
-        }, 5000);
     }, []);
 
     const renderSteps = (num: number) =>
@@ -40,7 +36,9 @@ export default function ProgramSteps({
                     // handleClick={handleClick}
                     step={i}
                     key={i}
-                    logic={updateLoop}
+                    logic={(step, newState) =>
+                        updateLoop(step, newState, title)
+                    }
                     loop={loop}
                     // group={(i + 1) % 4 === 0 ? true : false}
                 />
