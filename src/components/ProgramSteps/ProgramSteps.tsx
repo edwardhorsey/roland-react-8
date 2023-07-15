@@ -1,60 +1,71 @@
-import React, { Component } from "react";
+import React, { useEffect, useRef } from "react";
+import type { MutableRefObject } from "react";
 import Step from "../Step";
 import styles from "./ProgramSteps.module.scss";
 import Button from "../Button";
+import type { Track } from "~/data/tracks";
 
-class ProgramSteps extends Component {
-    constructor(props) {
-        super(props);
-        this.stepRefs = (() =>
-            [...Array(16).keys()].map((_) => React.createRef()))();
-    }
+export default function ProgramSteps({
+    title,
+    storeStepRefs,
+    clearLoop,
+    fillLoop,
+    updateLoop,
+    loop,
+}: {
+    title: Track;
+    storeStepRefs: (
+        title: Track,
+        stepRefs: MutableRefObject<HTMLDivElement[]>
+    ) => void;
+    clearLoop: (title: Track) => void;
+    fillLoop: (title: Track) => void;
+    updateLoop: (step: number, newState: 0 | 1) => void;
+    loop: number[];
+}) {
+    const stepRefs = useRef<HTMLDivElement[]>([]);
 
-    componentDidMount() {
-        this.props.storeStepRefs(this.props.title, this.stepRefs);
-    }
+    useEffect(() => {
+        storeStepRefs(title, stepRefs);
 
-    renderSteps = (num) =>
+        setTimeout(() => {
+            console.log(stepRefs.current);
+        }, 5000);
+    }, []);
+
+    const renderSteps = (num: number) =>
         [...Array(num).keys()].map((_, i) => {
             return (
                 <Step
-                    stepRef={this.stepRefs[i]}
-                    // handleClick={this.handleClick}
+                    stepRefs={stepRefs}
+                    // handleClick={handleClick}
                     step={i}
                     key={i}
-                    logic={this.updateLoop}
-                    loop={this.props.loop}
-                    group={(i + 1) % 4 === 0 ? true : false}
+                    logic={updateLoop}
+                    loop={loop}
+                    // group={(i + 1) % 4 === 0 ? true : false}
                 />
             );
         });
 
-    updateLoop = (num, state) =>
-        this.props.updateLoop(num, state, this.props.title);
+    const steps = renderSteps(16);
 
-    render() {
-        const steps = this.renderSteps(16);
-
-        return (
-            <article className={styles.instrument}>
-                <h3 className="text-xl font-bold">{this.props.title}</h3>
-                <section>{steps}</section>
-                <Button
-                    className={styles.marginRight}
-                    text="Clear"
-                    logic={() => {
-                        this.props.clearLoop(this.props.title);
-                    }}
-                />
-                <Button
-                    text="Fill"
-                    logic={() => {
-                        this.props.fillLoop(this.props.title);
-                    }}
-                />
-            </article>
-        );
-    }
+    return (
+        <article className={styles.instrument}>
+            <h3 className="text-xl font-bold">{title}</h3>
+            <section>{steps}</section>
+            <Button
+                text="Clear"
+                logic={() => {
+                    clearLoop(title);
+                }}
+            />
+            <Button
+                text="Fill"
+                logic={() => {
+                    fillLoop(title);
+                }}
+            />
+        </article>
+    );
 }
-
-export default ProgramSteps;

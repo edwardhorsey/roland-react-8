@@ -4,13 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../data/fa-library";
 import { api } from "~/utils/api";
 import type { Beat } from "@prisma/client";
+import type { Loop } from "~/containers/App/App";
 
 export default function OwnBeats({
     loadLoop,
     loop,
 }: {
     loadLoop: (loop: Beat) => void;
-    loop: Beat;
+    loop: Loop;
 }) {
     const [state, setState] = useState({ iconClass: false, beatName: "" });
 

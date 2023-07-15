@@ -14,7 +14,7 @@ export default function MachineSequencer({
 }: {
     storeStepRefs: (
         track: Track,
-        refs: MutableRefObject<HTMLDivElement>[]
+        refs: MutableRefObject<HTMLDivElement[]>
     ) => void;
     updateLoop: (num: number, onOrOff: 0 | 1, instr: Track) => void;
     clearLoop: (track: Track) => void;

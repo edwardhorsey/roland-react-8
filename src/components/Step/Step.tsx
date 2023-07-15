@@ -4,12 +4,12 @@ export default function Step({
     loop,
     step,
     logic,
-    stepRef,
+    stepRefs,
 }: {
     loop: number[];
     step: number;
     logic: (step: number, newState: 0 | 1) => void;
-    stepRef: MutableRefObject<HTMLDivElement | null>;
+    stepRefs: MutableRefObject<HTMLDivElement[]>;
 }) {
     const sendToLoop = () => {
         const newState = loop[step];
@@ -31,7 +31,12 @@ export default function Step({
             onClick={sendToLoop}
             name={`${step}`}
         >
-            <div ref={stepRef} className="h-10 w-10"></div>
+            <div
+                ref={(el) => {
+                    if (el) stepRefs.current[step] = el;
+                }}
+                className="h-10 w-10"
+            ></div>
         </button>
     );
 }

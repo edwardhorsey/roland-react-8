@@ -20,22 +20,21 @@ import type { Track } from "~/data/tracks";
 export type Loop = Record<Track, number[]>;
 
 interface Engine {
-    gainNodes: Record<Track, GainNode>;
-    masterGain: GainNode;
-    mainDryOut: GainNode;
-    distortion: WaveShaperNode;
-    distortionPre: GainNode;
-    distortionOut: GainNode;
-    limiter: DynamicsCompressorNode;
+    gainNodes: Record<Track, GainNode> | undefined;
+    masterGain: GainNode | undefined;
+    mainDryOut: GainNode | undefined;
+    distortion: WaveShaperNode | undefined;
+    distortionPre: GainNode | undefined;
+    distortionOut: GainNode | undefined;
+    limiter: DynamicsCompressorNode | undefined;
     mainOut: string;
-    stepRefs:
-        | Record<Track, React.MutableRefObject<HTMLDivElement | null>[]>
-        | undefined;
+    stepRefs: { [K in Track]?: MutableRefObject<HTMLDivElement[] | null> };
     notesInQueue: { note: number; time: number }[];
     lastNoteDrawn: number;
     lookahead: number;
     scheduleAheadTime: number;
     timerID: number | undefined;
+    shouldDraw: boolean;
     unlocked: boolean;
     tempo: number;
     current16thNote: number;
@@ -43,7 +42,27 @@ interface Engine {
 }
 
 function App() {
-    const engine = useRef<Engine | undefined>();
+    const engine = useRef<Engine>({
+        gainNodes: undefined,
+        mainDryOut: undefined,
+        masterGain: undefined,
+        distortion: undefined,
+        distortionPre: undefined,
+        distortionOut: undefined,
+        limiter: undefined,
+        mainOut: "",
+        stepRefs: {},
+        notesInQueue: [],
+        lastNoteDrawn: 0,
+        lookahead: 25.0,
+        scheduleAheadTime: 0.2,
+        timerID: undefined,
+        shouldDraw: false,
+        unlocked: false,
+        tempo: 130,
+        current16thNote: 0,
+        nextNoteTime: 0.0,
+    });
 
     const [state, setState] = useState<{
         context: AudioContext | undefined;
@@ -76,7 +95,7 @@ function App() {
                 bufferLoader: buffers,
             }));
 
-            engine.current = {
+            const engineNodes = {
                 gainNodes: setupGainNodes(context),
                 mainDryOut: createMainDryOut(context),
                 masterGain: createMasterGain(context),
@@ -84,18 +103,9 @@ function App() {
                 distortionPre: createDistortionPre(context),
                 distortionOut: createDistortionOut(context),
                 limiter: createLimiter(context),
-                mainOut: "",
-                stepRefs: undefined,
-                notesInQueue: [],
-                lastNoteDrawn: 0,
-                lookahead: 25.0,
-                scheduleAheadTime: 0.2,
-                timerID: undefined,
-                unlocked: false,
-                tempo: 130,
-                current16thNote: 0,
-                nextNoteTime: 0.0,
             };
+
+            engine.current = { ...engine.current, ...engineNodes };
 
             console.log("context and sounds loaded and stored on state");
         };
@@ -121,7 +131,16 @@ function App() {
         instrNode: AudioNode,
         time: number
     ) => {
-        if (!state.context || !engine.current) return;
+        if (
+            !state.context ||
+            !engine.current ||
+            !engine.current.distortionPre ||
+            !engine.current.distortion ||
+            !engine.current.distortionOut ||
+            !engine.current.masterGain ||
+            !engine.current.mainDryOut
+        )
+            return;
 
         const sampleSource = state.context.createBufferSource();
         sampleSource.buffer = audioBuffer;
@@ -143,7 +162,8 @@ function App() {
     };
 
     const scheduleNote = (beatNumber: number, time: number) => {
-        if (!engine.current || !state.bufferLoader) return;
+        if (!engine.current || !state.bufferLoader || !engine.current.gainNodes)
+            return;
 
         const { loop, bufferLoader } = state;
         engine.current.notesInQueue.push({ note: beatNumber, time: time });
@@ -171,32 +191,35 @@ function App() {
         ) {
             drawNote = engine.current.notesInQueue[0].note;
             engine.current.notesInQueue.splice(0, 1);
-        }
 
-        if (engine.current.lastNoteDrawn !== drawNote) {
-            for (const prop of getObjectKeysUnsafe(engine.current.stepRefs)) {
-                const stepRef = engine.current.stepRefs[prop];
-                const lastNoteDrawn = engine.current.lastNoteDrawn;
+            if (engine.current.lastNoteDrawn !== drawNote) {
+                for (const prop of getObjectKeysUnsafe(
+                    engine.current.stepRefs
+                )) {
+                    const stepRef = engine.current.stepRefs[prop];
+                    const lastNoteDrawn = engine.current.lastNoteDrawn;
 
-                if (stepRef) {
-                    const previous = stepRef[lastNoteDrawn]?.current;
+                    if (stepRef && stepRef.current) {
+                        const previous = stepRef.current[lastNoteDrawn];
 
-                    if (previous) {
-                        previous.style.backgroundColor = "";
-                    }
+                        if (previous) {
+                            previous.style.backgroundColor = "";
+                        }
 
-                    const next = stepRef[drawNote]?.current;
+                        const next = stepRef.current[drawNote];
 
-                    if (next) {
-                        next.style.backgroundColor = "rgba(241, 241, 241, 0.3)";
+                        if (next) {
+                            next.style.backgroundColor =
+                                "rgba(241, 241, 241, 0.3)";
+                        }
                     }
                 }
-            }
 
-            engine.current.lastNoteDrawn = drawNote;
+                engine.current.lastNoteDrawn = drawNote;
+            }
         }
 
-        requestAnimationFrame(draw);
+        if (engine.current.shouldDraw) requestAnimationFrame(draw);
     };
 
     const scheduler = () => {
@@ -229,8 +252,10 @@ function App() {
             node.start(0);
             engine.current.unlocked = true;
         }
+
         engine.current.nextNoteTime = state.context.currentTime; // Important: takes time from when you start scheduling the sequencing
         scheduler();
+        engine.current.shouldDraw = true;
         requestAnimationFrame(draw);
     };
 
@@ -238,6 +263,7 @@ function App() {
         if (!engine.current) return;
 
         window.clearTimeout(engine.current.timerID);
+        engine.current.shouldDraw = false;
     };
 
     const reset = () => {
@@ -245,6 +271,7 @@ function App() {
 
         window.clearTimeout(engine.current.timerID);
         engine.current.current16thNote = 0;
+        engine.current.shouldDraw = false;
 
         setTimeout(() => {
             if (!engine.current?.stepRefs) return;
@@ -252,9 +279,9 @@ function App() {
             for (const prop of getObjectKeysUnsafe(engine.current.stepRefs)) {
                 const stepRef = engine.current.stepRefs?.[prop];
 
-                if (stepRef) {
-                    stepRef.forEach((ref) => {
-                        if (ref.current) ref.current.style.backgroundColor = "";
+                if (stepRef && stepRef.current) {
+                    stepRef.current.forEach((ref) => {
+                        if (ref) ref.style.backgroundColor = "";
                     });
                 }
             }
@@ -262,7 +289,12 @@ function App() {
     };
 
     const distortionOn = () => {
-        if (!engine.current) return;
+        if (
+            !engine.current ||
+            !engine.current.distortionOut ||
+            !engine.current.mainDryOut
+        )
+            return;
 
         if (!state.distortionOn) {
             engine.current.distortionOut.gain.value = 0.7;
@@ -296,7 +328,6 @@ function App() {
     const loadLoop = (loop: Loop) => setState({ ...state, loop });
 
     const updateGain = (instr: Track, value: number) => {
-        console.log(instr, value);
         if (engine.current?.gainNodes) {
             const newValue = (gainStage[instr] * value) / 100;
             engine.current.gainNodes[instr].gain.value = newValue;
@@ -314,9 +345,9 @@ function App() {
 
     const storeStepRefs = (
         title: Track,
-        array: MutableRefObject<HTMLDivElement>[]
+        array: MutableRefObject<HTMLDivElement[]>
     ) => {
-        if (engine.current?.stepRefs) {
+        if (engine.current) {
             engine.current.stepRefs[title] = array;
         }
     };
