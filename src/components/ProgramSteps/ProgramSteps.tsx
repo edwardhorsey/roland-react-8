@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import type { MutableRefObject } from "react";
 import Step from "../Step";
-import styles from "./ProgramSteps.module.scss";
 import Button from "../Button";
 import type { Track } from "~/data/tracks";
 
@@ -51,9 +50,9 @@ export default function ProgramSteps({
     const steps = renderSteps(16);
 
     return (
-        <article className={styles.instrument}>
-            <h3 className="text-xl font-bold">{title}</h3>
-            <section>{steps}</section>
+        <article className="flex h-12 min-w-[1000px] items-center justify-evenly">
+            <h3 className="w-20 text-xl font-bold">{title}</h3>
+            <section className="flex">{steps}</section>
             <Button
                 text="Clear"
                 logic={() => {
