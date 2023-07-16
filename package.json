@@ -9,7 +9,8 @@
         "lint": "next lint",
         "start": "next start",
         "db:seed": "npx tsx prisma/seed.ts",
-        "prettier:write": "npx prettier --write ./"
+        "prettier:write": "npx prettier --write ./",
+        "types:check": "tsc --noEmit"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^6.4.0",

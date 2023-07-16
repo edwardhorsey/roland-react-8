@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../data/fa-library";
 import { api } from "~/utils/api";
 import type { Beat } from "@prisma/client";
-import type { Loop } from "~/containers/App/App";
+import type { Loop } from "~/data/loop";
 
 export default function OwnBeats({
     loadLoop,

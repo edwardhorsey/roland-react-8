@@ -7,7 +7,7 @@ import "../../data/fa-library";
 import OwnBeats from "../OwnBeats";
 import { signIn, useSession } from "next-auth/react";
 import type { Beat } from "@prisma/client";
-import type { Loop } from "~/containers/App/App";
+import type { Loop } from "~/data/loop";
 
 function InstrumentControls({
     stop,
