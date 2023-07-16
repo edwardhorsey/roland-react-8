@@ -1,4 +1,4 @@
-import { makeDistortionCurve } from "./distortion-curve";
+import { makeDistortionCurve } from "~/engine/distortion-curve";
 
 export const gainStage = {
     Master: 0.8,

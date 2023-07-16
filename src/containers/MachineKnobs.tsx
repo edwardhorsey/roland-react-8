@@ -1,6 +1,6 @@
 import React from "react";
-import InstrumentControls from "../components/InstrumentControls";
-import SampleControls from "../components/SampleControls";
+import InstrumentControls from "~/components/InstrumentControls";
+import SampleControls from "~/components/SampleControls";
 import type { Beat } from "@prisma/client";
 import { tracks } from "~/types/tracks";
 import type { Track } from "~/types/tracks";

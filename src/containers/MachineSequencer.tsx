@@ -1,6 +1,6 @@
 import React from "react";
 import type { MutableRefObject } from "react";
-import ProgramSteps from "../components/ProgramSteps";
+import ProgramSteps from "~/components/ProgramSteps";
 import { tracks } from "~/types/tracks";
 import type { Track } from "~/types/tracks";
 import type { Loop } from "~/types/loop";

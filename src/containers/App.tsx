@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import type { MutableRefObject } from "react";
-import { setupSample } from "../engine/load-samples";
+import { setupSample } from "~/engine/load-samples";
 import {
     gainStage,
     setupGainNodes,
@@ -10,10 +10,10 @@ import {
     createDistortion,
     createDistortionPre,
     createDistortionOut,
-} from "../engine/load-audio-nodes";
+} from "~/engine/load-audio-nodes";
 
-import MachineSequencer from "./MachineSequencer";
-import MachineKnobs from "./MachineKnobs";
+import MachineSequencer from "~/containers/MachineSequencer";
+import MachineKnobs from "~/containers/MachineKnobs";
 import { getObjectKeysUnsafe } from "~/lib/helpers";
 import type { Track } from "~/types/tracks";
 import type { Loop } from "~/types/loop";
