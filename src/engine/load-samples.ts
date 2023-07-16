@@ -1,6 +1,6 @@
-import { filenames } from "~/data/filenames";
-import { getObjectKeysUnsafe } from "~/data/helpers";
-import type { Track } from "~/data/tracks";
+import { filenames } from "~/lib/filenames";
+import { getObjectKeysUnsafe } from "~/lib/helpers";
+import type { Track } from "~/types/tracks";
 
 const getFile = async (audioContext: AudioContext, filepath: string) => {
     const response = await fetch(filepath);

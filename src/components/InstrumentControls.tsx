@@ -3,11 +3,11 @@ import Button from "./Button";
 import FXButton from "./FXButton";
 import { Donut } from "react-dial-knob";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../data/fa-library";
+import "~/lib/fa-library";
 import OwnBeats from "./OwnBeats";
 import { signIn, useSession } from "next-auth/react";
 import type { Beat } from "@prisma/client";
-import type { Loop } from "~/data/loop";
+import type { Loop } from "~/types/loop";
 
 export default function InstrumentControls({
     stop,

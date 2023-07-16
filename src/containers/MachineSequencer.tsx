@@ -1,9 +1,9 @@
 import React from "react";
 import type { MutableRefObject } from "react";
 import ProgramSteps from "../components/ProgramSteps";
-import { tracks } from "../data/tracks";
-import type { Track } from "../data/tracks";
-import type { Loop } from "~/data/loop";
+import { tracks } from "~/types/tracks";
+import type { Track } from "~/types/tracks";
+import type { Loop } from "~/types/loop";
 
 export default function MachineSequencer({
     storeStepRefs,

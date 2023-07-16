@@ -2,9 +2,9 @@ import React from "react";
 import InstrumentControls from "../components/InstrumentControls";
 import SampleControls from "../components/SampleControls";
 import type { Beat } from "@prisma/client";
-import { tracks } from "~/data/tracks";
-import type { Track } from "~/data/tracks";
-import type { Loop } from "~/data/loop";
+import { tracks } from "~/types/tracks";
+import type { Track } from "~/types/tracks";
+import type { Loop } from "~/types/loop";
 
 export default function MachineKnobs({
     updateTempo,

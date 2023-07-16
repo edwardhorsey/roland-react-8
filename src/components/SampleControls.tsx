@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Donut } from "react-dial-knob";
 import MuteButton from "./MuteButton";
-import type { Track } from "~/data/tracks";
+import type { Track } from "~/types/tracks";
 
 export default function SampleControls({
     title,
