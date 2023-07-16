@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import type { SyntheticEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../../data/fa-library";
+import "../data/fa-library";
 import { api } from "~/utils/api";
 import type { Beat } from "@prisma/client";
 import type { Loop } from "~/data/loop";

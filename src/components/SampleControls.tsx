@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { Donut } from "react-dial-knob";
-import MuteButton from "../MuteButton";
+import MuteButton from "./MuteButton";
+import type { Track } from "~/data/tracks";
 
 export default function SampleControls({
     title,
     updateGain,
 }: {
-    title: string;
-    updateGain: (title: string, gain: number) => void;
+    title: Track;
+    updateGain: (title: Track, gain: number) => void;
 }) {
     const [state, setState] = useState({
         gain: 70,
@@ -38,7 +39,6 @@ export default function SampleControls({
         >
             <div className="mx-auto">
                 <Donut
-                    className="mx-auto"
                     diameter={80}
                     min={0}
                     max={100}

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import Button from "../Button/Button";
-import FXButton from "../FXButton";
+import Button from "./Button";
+import FXButton from "./FXButton";
 import { Donut } from "react-dial-knob";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "../../data/fa-library";
-import OwnBeats from "../OwnBeats";
+import "../data/fa-library";
+import OwnBeats from "./OwnBeats";
 import { signIn, useSession } from "next-auth/react";
 import type { Beat } from "@prisma/client";
 import type { Loop } from "~/data/loop";
 
-function InstrumentControls({
+export default function InstrumentControls({
     stop,
     start,
     reset,
@@ -149,7 +149,5 @@ function InstrumentControls({
         </section>
     );
 }
-
-export default InstrumentControls;
 
 // https://pavelkukov.github.io/react-dial-knob/iframe.html?id=knob-skins--donut&knob-Diameter=180&knob-Min=0&knob-Max=10&knob-Step=1&knob-Value=3&knob-Thickness=15&knob-Color=#1BA098&knob-Background=#e1e1e1&knob-Background (Max reached)=#051622&knob-Center Color=#fff&knob-Focused Center Color=#F7F4E9

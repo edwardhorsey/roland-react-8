@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import type { MutableRefObject } from "react";
-import Step from "../Step";
-import Button from "../Button";
+import Step from "./Step";
+import Button from "./Button";
 import type { Track } from "~/data/tracks";
 
 export default function ProgramSteps({
