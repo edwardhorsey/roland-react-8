@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "./Button";
 import FXButton from "./FXButton";
 import { Donut } from "react-dial-knob";
@@ -6,65 +6,41 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "~/lib/fa-library";
 import OwnBeats from "./OwnBeats";
 import { signIn, useSession } from "next-auth/react";
-import type { Beat } from "@prisma/client";
-import type { Loop } from "~/types/loop";
+import useDrumMachineStore from "~/stores/useDrumMachineStore";
+import { shallow } from "zustand/shallow";
 
-export default function InstrumentControls({
-    stop,
-    start,
-    reset,
-    updateTempo,
-    updateMaster,
-    distortionOn,
-    distorted,
-    loop,
-    loadLoop,
-}: {
-    stop: () => void;
-    start: () => Promise<void>;
-    reset: () => void;
-    updateTempo: (tempo: number) => void;
-    updateMaster: (master: number) => void;
-    distortionOn: () => void;
-    distorted: boolean;
-    loop: Loop;
-    loadLoop: (loop: Beat) => void;
-}) {
-    const [state, setState] = useState({
-        tempo: 130,
-        master: 80,
-        distortion: false,
-        isPlaying: false,
-    });
-
+export default function InstrumentControls() {
     const { data: sessionData } = useSession();
 
-    const playPause = async () => {
-        state.isPlaying ? stop() : await start();
-        setState({ ...state, isPlaying: !state.isPlaying });
-    };
-
-    const handleReset = () => {
-        setState({ ...state, isPlaying: false });
-        reset();
-    };
-
-    const handleTempoChange = (tempo: number) => {
-        setState({ ...state, tempo });
-        updateTempo(tempo);
-    };
-
-    const handlemMsterChange = (master: number) => {
-        setState({ ...state, master });
-        updateMaster(master);
-    };
-
-    const { tempo, master, isPlaying } = state;
-
-    const playButton = isPlaying ? (
-        <Button text={"Pause"} logic={playPause} />
-    ) : (
-        <Button text={"Play"} logic={playPause} />
+    const {
+        master,
+        tempo,
+        isPlaying,
+        updateTempo,
+        updateMaster,
+        start,
+        stop,
+        reset,
+        distortionOn,
+        distorted,
+        loop,
+        loadLoop,
+    } = useDrumMachineStore(
+        (state) => ({
+            master: state.master,
+            tempo: state.tempo,
+            isPlaying: state.isPlaying,
+            updateTempo: state.updateTempo,
+            updateMaster: state.updateMaster,
+            start: state.start,
+            stop: state.stop,
+            reset: state.reset,
+            distortionOn: state.toggleDistortion,
+            distorted: state.distortionOn,
+            loop: state.loop,
+            loadLoop: state.loadLoop,
+        }),
+        shallow
     );
 
     return (
@@ -95,8 +71,12 @@ export default function InstrumentControls({
             </div>
             <section className="flex w-3/5 justify-evenly">
                 <div className="flex w-16 flex-col gap-2.5">
-                    {playButton}
-                    <Button text={"Stop"} logic={handleReset} />
+                    {isPlaying ? (
+                        <Button text={"Pause"} logic={stop} />
+                    ) : (
+                        <Button text={"Play"} logic={start} />
+                    )}
+                    <Button text={"Stop"} logic={reset} />
                 </div>
                 <Donut
                     diameter={105}
@@ -108,7 +88,7 @@ export default function InstrumentControls({
                         donutColor: "Black",
                         donutThickness: 25,
                     }}
-                    onValueChange={handleTempoChange}
+                    onValueChange={updateTempo}
                     ariaLabelledBy={"tempo"}
                 >
                     <label id={"tempo"}>Tempo</label>
@@ -123,7 +103,7 @@ export default function InstrumentControls({
                         donutColor: "Black",
                         donutThickness: 25,
                     }}
-                    onValueChange={handlemMsterChange}
+                    onValueChange={updateMaster}
                     ariaLabelledBy={"master-gain"}
                 >
                     <label id={"master-gain"}>Master Gain</label>

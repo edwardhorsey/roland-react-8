@@ -1,46 +1,38 @@
 import React, { useEffect, useRef } from "react";
-import type { MutableRefObject } from "react";
 import Step from "~/components/Step";
 import Button from "~/components/Button";
 import type { Track } from "~/types/tracks";
+import useDrumMachineStore from "~/stores/useDrumMachineStore";
 
-export default function ProgramSteps({
-    title,
-    storeStepRefs,
-    clearLoop,
-    fillLoop,
-    updateLoop,
-    loop,
-}: {
-    title: Track;
-    storeStepRefs: (
-        title: Track,
-        stepRefs: MutableRefObject<HTMLDivElement[]>
-    ) => void;
-    clearLoop: (title: Track) => void;
-    fillLoop: (title: Track) => void;
-    updateLoop: (step: number, newState: 0 | 1, title: Track) => void;
-    loop: number[];
-}) {
+export default function ProgramSteps({ title }: { title: Track }) {
+    const { storeStepRefs, clearLoop, fillLoop, updateLoop, loop } =
+        useDrumMachineStore((state) => ({
+            storeStepRefs: state.storeStepRefs,
+            clearLoop: state.clearLoop,
+            fillLoop: state.fillLoop,
+            updateLoop: state.updateLoop,
+            loop: state.loop,
+        }));
+
     const stepRefs = useRef<HTMLDivElement[]>([]);
 
     useEffect(() => {
         storeStepRefs(title, stepRefs);
-    }, []);
+    }, [storeStepRefs, title]);
+
+    const thisLoop = loop[title];
 
     const renderSteps = (num: number) =>
         [...Array(num).keys()].map((_, i) => {
             return (
                 <Step
                     stepRefs={stepRefs}
-                    // handleClick={handleClick}
                     step={i}
                     key={i}
                     logic={(step, newState) =>
                         updateLoop(step, newState, title)
                     }
-                    loop={loop}
-                    // group={(i + 1) % 4 === 0 ? true : false}
+                    loop={thisLoop}
                 />
             );
         });

@@ -33,22 +33,27 @@ const sequencer: {
     timerID: undefined,
 };
 
-type GainNodes = {
-    gainNodes: { [k in Track]?: GainNode } | undefined;
-    mainDryOut: GainNode | undefined;
-    masterGain: GainNode | undefined;
-    distortion: WaveShaperNode | undefined;
-    distortionPre: GainNode | undefined;
-    distortionOut: GainNode | undefined;
-    limiter: DynamicsCompressorNode | undefined;
+type EngineNodes = {
+    gainNodes?: { [k in Track]?: GainNode };
+    mainDryOut?: GainNode;
+    masterGain?: GainNode;
+    distortion?: WaveShaperNode;
+    distortionPre?: GainNode;
+    distortionOut?: GainNode;
+    limiter?: DynamicsCompressorNode;
 };
+
+const engineNodes: EngineNodes = {};
+
+let buffers: { [k in Track]?: AudioBuffer } | undefined;
 
 export type DrumMachine = {
     stepRefs: { [k in Track]?: MutableRefObject<HTMLDivElement[]> } | undefined;
     unlocked: boolean;
     tempo: number;
+    master: number;
     isPlaying: boolean;
-    bufferLoader: { [k in Track]?: AudioBuffer } | undefined;
+    initiated: boolean;
     context: AudioContext | undefined;
     distortionOn: boolean;
     loop: Loop;
@@ -58,7 +63,7 @@ export type DrumMachine = {
         audioBuffer: AudioBuffer,
         instrNode: AudioNode,
         time: number
-    ) => AudioBufferSourceNode | undefined;
+    ) => void;
     scheduleNote: (beatNumber: number, time: number) => void;
     draw: () => void;
     scheduler: () => void;
@@ -79,22 +84,15 @@ export type DrumMachine = {
     ) => void;
 };
 
-type DrumMachineStore = GainNodes & DrumMachine;
+type DrumMachineStore = DrumMachine;
 
 const useDrumMachineStore = create<DrumMachineStore>()((set, get) => ({
-    gainNodes: undefined,
-    mainDryOut: undefined,
-    masterGain: undefined,
-    distortion: undefined,
-    distortionPre: undefined,
-    distortionOut: undefined,
-    limiter: undefined,
-
     stepRefs: {},
     unlocked: false,
     tempo: 130,
+    master: 100,
     isPlaying: false,
-
+    initiated: false,
     context: undefined, // audio context
     bufferLoader: undefined, // samples
     distortionOn: false,
@@ -110,25 +108,18 @@ const useDrumMachineStore = create<DrumMachineStore>()((set, get) => ({
 
     init: async () => {
         const context = new AudioContext();
-        const buffers = await setupSample(context);
 
-        set((state) => ({
-            ...state,
-            context,
-            bufferLoader: buffers,
-        }));
+        buffers = { ...(await setupSample(context)) };
 
-        const engineNodes = {
-            gainNodes: setupGainNodes(context),
-            mainDryOut: createMainDryOut(context),
-            masterGain: createMasterGain(context),
-            distortion: createDistortion(context),
-            distortionPre: createDistortionPre(context),
-            distortionOut: createDistortionOut(context),
-            limiter: createLimiter(context),
-        };
+        engineNodes.gainNodes = setupGainNodes(context);
+        engineNodes.mainDryOut = createMainDryOut(context);
+        engineNodes.masterGain = createMasterGain(context);
+        engineNodes.distortion = createDistortion(context);
+        engineNodes.distortionPre = createDistortionPre(context);
+        engineNodes.distortionOut = createDistortionOut(context);
+        engineNodes.limiter = createLimiter(context);
 
-        set((state) => ({ ...state, ...engineNodes }));
+        set((state) => ({ ...state, context, initiated: true }));
 
         console.log("context and sounds loaded and stored on state");
     },
@@ -150,15 +141,14 @@ const useDrumMachineStore = create<DrumMachineStore>()((set, get) => ({
         instrNode: AudioNode,
         time: number
     ) => {
+        const { context, distortionOn } = get();
         const {
-            context,
-            distortionOn,
+            mainDryOut,
             distortionPre,
             distortion,
             distortionOut,
             masterGain,
-            mainDryOut,
-        } = get();
+        } = engineNodes;
 
         if (
             !context ||
@@ -166,8 +156,7 @@ const useDrumMachineStore = create<DrumMachineStore>()((set, get) => ({
             !distortionPre ||
             !distortion ||
             !distortionOut ||
-            !masterGain ||
-            !mainDryOut
+            !masterGain
         )
             return;
 
@@ -186,19 +175,18 @@ const useDrumMachineStore = create<DrumMachineStore>()((set, get) => ({
         mainDryOut.connect(masterGain);
         masterGain.connect(context.destination);
         sampleSource.start(time);
-
-        return sampleSource;
     },
 
     scheduleNote: (beatNumber: number, time: number) => {
-        const { bufferLoader, gainNodes, loop } = get();
+        const { loop } = get();
+        const { gainNodes } = engineNodes;
 
-        if (!bufferLoader || !gainNodes) return;
+        if (!buffers || !gainNodes) return;
 
         sequencer.notesInQueue.push({ note: beatNumber, time: time });
 
         for (const prop of getObjectKeysUnsafe(loop)) {
-            const buffer = bufferLoader[prop];
+            const buffer = buffers[prop];
 
             if (loop[prop][sequencer.current16thNote] && buffer) {
                 const audioNode = gainNodes[prop];
@@ -320,7 +308,8 @@ const useDrumMachineStore = create<DrumMachineStore>()((set, get) => ({
     },
 
     toggleDistortion: () => {
-        const { distortionOn, distortionOut, mainDryOut } = get();
+        const { distortionOn } = get();
+        const { distortionOut, mainDryOut } = engineNodes;
 
         if (!distortionOut || !mainDryOut) return;
 
@@ -356,7 +345,7 @@ const useDrumMachineStore = create<DrumMachineStore>()((set, get) => ({
     loadLoop: (loop: Loop) => set((state) => ({ ...state, loop })),
 
     updateGain: (instr: Track, value: number) => {
-        const { gainNodes } = get();
+        const { gainNodes } = engineNodes;
 
         if (!gainNodes) return;
 
@@ -369,9 +358,11 @@ const useDrumMachineStore = create<DrumMachineStore>()((set, get) => ({
     },
 
     updateMaster: (value: number) => {
-        const { masterGain } = get();
+        const { masterGain } = engineNodes;
 
         if (masterGain) masterGain.gain.value = value / 100;
+
+        set((state) => ({ ...state, master: value }));
     },
 
     updateTempo: (newTempo: number) => {

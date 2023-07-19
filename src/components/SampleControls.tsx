@@ -1,26 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Donut } from "react-dial-knob";
 import MuteButton from "~/components/MuteButton";
+import useDrumMachineStore from "~/stores/useDrumMachineStore";
 import type { Track } from "~/types/tracks";
 
-export default function SampleControls({
-    title,
-    updateGain,
-}: {
-    title: Track;
-    updateGain: (title: Track, gain: number) => void;
-}) {
+export default function SampleControls({ title }: { title: Track }) {
     const [state, setState] = useState({
         gain: 70,
         mute: false,
     });
 
-    useEffect(() => {
-        updateGain(title, state.gain);
-    }, []);
+    const updateGain = useDrumMachineStore((state) => state.updateGain);
 
     const valueChange = (gain: number) => {
-        setState({ ...state, gain: gain });
+        setState((state) => ({ ...state, gain: gain }));
         updateGain(title, state.mute ? 0 : gain);
     };
 
