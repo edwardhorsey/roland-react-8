@@ -29,6 +29,18 @@ export const setupGainNodes = (audiocontext: AudioContext) => {
     };
 };
 
+export const setupEngineNodes = (audiocontext: AudioContext) => {
+    return {
+        gainNodes: setupGainNodes(audiocontext),
+        mainDryOut: createMainDryOut(audiocontext),
+        masterGain: createMasterGain(audiocontext),
+        distortion: createDistortion(audiocontext),
+        distortionPre: createDistortionPre(audiocontext),
+        distortionOut: createDistortionOut(audiocontext),
+        limiter: createLimiter(audiocontext),
+    };
+};
+
 export const createMainDryOut = (audiocontext: AudioContext) => {
     return audiocontext.createGain();
 };
