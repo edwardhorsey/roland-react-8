@@ -42,7 +42,7 @@ export default function ProgramSteps({ title }: { title: Track }) {
     return (
         <article className="flex h-12 min-w-[1000px] items-center justify-evenly">
             <h3 className="w-20 text-xl font-bold">{title}</h3>
-            <section className="flex">{steps}</section>
+            <div className="flex">{steps}</div>
             <Button
                 text="Clear"
                 logic={() => {

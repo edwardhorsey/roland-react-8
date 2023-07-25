@@ -69,7 +69,7 @@ export default function InstrumentControls() {
                     </a>
                 </div>
             </div>
-            <section className="flex w-3/5 justify-evenly">
+            <div className="flex w-3/5 justify-evenly">
                 <div className="flex w-16 flex-col gap-2.5">
                     {isPlaying ? (
                         <Button text={"Pause"} logic={stop} />
@@ -113,7 +113,7 @@ export default function InstrumentControls() {
                     logic={distortionOn}
                     dist={distorted}
                 />
-            </section>
+            </div>
             {sessionData ? (
                 <OwnBeats loop={loop} loadLoop={loadLoop} />
             ) : (

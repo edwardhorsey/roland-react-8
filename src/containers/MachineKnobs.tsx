@@ -6,14 +6,12 @@ import { tracks } from "~/types/tracks";
 export default function MachineKnobs() {
     return (
         <>
-            <article>
-                <InstrumentControls />
-            </article>
-            <article className="flex w-full min-w-[1100px] justify-evenly">
+            <InstrumentControls />
+            <section className="flex w-full min-w-[1100px] justify-evenly">
                 {tracks.map((sample, index) => {
                     return <SampleControls key={index} title={sample} />;
                 })}
-            </article>
+            </section>
         </>
     );
 }
