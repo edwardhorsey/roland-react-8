@@ -1,0 +1,15 @@
+version: "3"
+services:
+    devdb:
+        container_name: devdb
+        image: postgres:13.1
+        restart: always
+        environment:
+            POSTGRES_USER: username
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: mydb
+            PGDATA: /var/lib/postgresql/data/pgdata
+        volumes:
+            - ./prisma/devdb:/var/lib/postgresql/data:rw
+        ports:
+            - 5432:5432
