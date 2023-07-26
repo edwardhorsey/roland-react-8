@@ -28,7 +28,7 @@ export default function SampleControls({ title }: { title: Track }) {
 
     return (
         <article
-            className={`flex flex-col rounded-lg bg-gray-300 p-5 shadow-sm`}
+            className={`flex flex-col rounded-lg bg-gray-100 p-5 shadow-sm`}
         >
             <div className="mx-auto">
                 <Donut

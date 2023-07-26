@@ -4,7 +4,7 @@ import MachineKnobs from "~/containers/MachineKnobs";
 
 function App() {
     return (
-        <main className="flex flex-col gap-5 bg-green-800 p-5">
+        <main className="flex h-full flex-col gap-5 bg-neutral-300 p-5">
             <MachineKnobs />
             <MachineSequencer />
         </main>
