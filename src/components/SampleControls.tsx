@@ -30,7 +30,7 @@ export default function SampleControls({ title }: { title: Track }) {
         <article
             className={`flex flex-col rounded-lg bg-gray-100 p-5 shadow-sm`}
         >
-            <div className="mx-auto">
+            <div className="mx-auto mb-5">
                 <Donut
                     diameter={80}
                     min={0}
@@ -46,7 +46,6 @@ export default function SampleControls({ title }: { title: Track }) {
                     ariaLabelledBy={title}
                 ></Donut>
             </div>
-            <label id={title}>Gain</label>
             <MuteButton text={title} logic={mute} muted={state.mute} />
         </article>
     );
