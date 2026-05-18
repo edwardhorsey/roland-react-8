@@ -5,13 +5,10 @@ import { Donut } from "react-dial-knob";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "~/lib/fa-library";
 import OwnBeats from "./OwnBeats";
-import { signIn, useSession } from "next-auth/react";
 import useDrumMachineStore from "~/stores/useDrumMachineStore";
 import { shallow } from "zustand/shallow";
 
 export default function InstrumentControls() {
-    const { data: sessionData } = useSession();
-
     const {
         master,
         tempo,
@@ -120,18 +117,7 @@ export default function InstrumentControls() {
                     dist={distorted}
                 />
             </div>
-            {sessionData ? (
-                <OwnBeats loop={loop} loadLoop={loadLoop} />
-            ) : (
-                <Button
-                    logic={() => {
-                        signIn()
-                            .then((res) => console.log(res))
-                            .catch((err) => console.log(err));
-                    }}
-                    text="Save pattern"
-                />
-            )}
+            <OwnBeats loop={loop} loadLoop={loadLoop} />
         </section>
     );
 }

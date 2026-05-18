@@ -1,84 +1,82 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { SyntheticEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "~/lib/fa-library";
-import { api } from "~/utils/api";
-import type { Beat } from "@prisma/client";
 import type { Loop } from "~/types/loop";
+
+type SavedBeat = {
+    id: string;
+    name: string;
+    loop: Loop;
+    savedAt: string;
+};
+
+const STORAGE_KEY = "roland-beats";
+
+function getSavedBeats(): SavedBeat[] {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? (JSON.parse(raw) as SavedBeat[]) : [];
+    } catch {
+        return [];
+    }
+}
+
+function persistBeats(beats: SavedBeat[]): void {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(beats));
+}
 
 export default function OwnBeats({
     loadLoop,
     loop,
 }: {
-    loadLoop: (loop: Beat) => void;
+    loadLoop: (loop: Loop) => void;
     loop: Loop;
 }) {
-    const [state, setState] = useState({ iconClass: false, beatName: "" });
-
-    const data = api.beats.getUserBeats.useQuery();
-    const saveBeat = api.beats.saveUserBeat.useMutation();
-    const deleteBeat = api.beats.deleteUserBeat.useMutation();
-    const userBeats = data.data ?? [];
-
+    const [savedBeats, setSavedBeats] = useState<SavedBeat[]>(() =>
+        getSavedBeats()
+    );
+    const [beatName, setBeatName] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const selectRef = useRef<HTMLSelectElement>(null);
 
-    const renderOptions = () => {
-        return userBeats.map((beat, index) => {
-            return (
-                <option key={index} value={beat.id}>
-                    {beat.name}
-                </option>
-            );
-        });
-    };
+    const refreshBeats = useCallback(() => {
+        setSavedBeats(getSavedBeats());
+    }, []);
 
     const handleLoadLoop = (event: SyntheticEvent<HTMLSelectElement>) => {
         const beatId = event.currentTarget.value;
 
         if (beatId) {
-            const loop = userBeats.find((beat) => beat.id === beatId);
+            const found = savedBeats.find((b) => b.id === beatId);
 
-            if (loop) {
-                loadLoop(loop);
+            if (found) {
+                loadLoop(found.loop);
             }
         }
     };
 
-    const storeName = (event: SyntheticEvent<HTMLInputElement>) => {
-        setState({ ...state, beatName: event.currentTarget.value });
-        const input = inputRef.current;
-        if (input) input.style.boxShadow = "none";
-    };
-
-    const saveLoop = () => {
-        if (state.beatName) {
-            console.log("To store: ", state.beatName, loop);
-
-            saveBeat.mutate({
-                name: state.beatName,
-                loop: loop,
+    const handleSave = () => {
+        if (beatName) {
+            const beats = getSavedBeats();
+            beats.push({
+                id: crypto.randomUUID(),
+                name: beatName,
+                loop: structuredClone(loop),
+                savedAt: new Date().toISOString(),
             });
+            persistBeats(beats);
+            refreshBeats();
 
-            setState({ ...state, iconClass: true });
-        } else {
             if (inputRef.current) {
-                inputRef.current.style.boxShadow =
-                    "inset 0 0 8px rgba(114, 47, 55, 0.7)";
+                inputRef.current.value = "";
             }
+            setBeatName("");
+        } else if (inputRef.current) {
+            inputRef.current.style.boxShadow =
+                "inset 0 0 8px rgba(114, 47, 55, 0.7)";
         }
-        setTimeout(() => {
-            setState({ ...state, iconClass: false });
-        }, 1000);
     };
-
-    const saveBeatSuccess = saveBeat.isSuccess;
-
-    useEffect(() => {
-        if (saveBeatSuccess && inputRef.current) {
-            inputRef.current.value = "";
-        }
-    }, [saveBeatSuccess]);
 
     const handleDeletePattern = () => {
         const select = selectRef.current;
@@ -87,14 +85,8 @@ export default function OwnBeats({
             const beatId = select.value;
 
             if (beatId) {
-                deleteBeat.mutate(
-                    { id: beatId },
-                    {
-                        onSuccess: () => {
-                            void data.refetch();
-                        },
-                    }
-                );
+                persistBeats(getSavedBeats().filter((b) => b.id !== beatId));
+                refreshBeats();
             }
         }
     };
@@ -110,8 +102,12 @@ export default function OwnBeats({
                         onChange={handleLoadLoop}
                         className="mr-1.5 w-40 p-1 text-sm"
                     >
-                        <option value={undefined}>--- Select a beat ---</option>
-                        {renderOptions()}
+                        <option value="">Select..</option>
+                        {savedBeats.map((beat) => (
+                            <option key={beat.id} value={beat.id}>
+                                {beat.name}
+                            </option>
+                        ))}
                     </select>
                     <button
                         onClick={handleDeletePattern}
@@ -125,15 +121,15 @@ export default function OwnBeats({
                     <input
                         ref={inputRef}
                         type="text"
-                        placeholder="Name your beat"
+                        placeholder="Beat name"
                         required
-                        onChange={storeName}
+                        onChange={(e) => setBeatName(e.currentTarget.value)}
                         className="mr=1 w-40 appearance-none border border-gray-900 p-1 text-sm outline-none focus:outline-none"
                     />
                     <button
                         type="button"
                         className="text-2xl"
-                        onClick={saveLoop}
+                        onClick={handleSave}
                     >
                         <FontAwesomeIcon icon={["fas", "save"]} />
                     </button>
