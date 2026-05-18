@@ -1,10 +1,9 @@
 packages:
   - '.'
 
-allowBuilds:
-  '@fortawesome/fontawesome-common-types': set this to true or false
-  '@fortawesome/fontawesome-svg-core': set this to true or false
-  '@fortawesome/free-brands-svg-icons': set this to true or false
-  '@fortawesome/free-solid-svg-icons': set this to true or false
 onlyBuiltDependencies:
   - esbuild
+  - '@fortawesome/fontawesome-common-types'
+  - '@fortawesome/fontawesome-svg-core'
+  - '@fortawesome/free-brands-svg-icons'
+  - '@fortawesome/free-solid-svg-icons'
