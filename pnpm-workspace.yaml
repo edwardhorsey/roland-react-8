@@ -1,3 +1,6 @@
+packages:
+  - '.'
+
 allowBuilds:
   '@fortawesome/fontawesome-common-types': set this to true or false
   '@fortawesome/fontawesome-svg-core': set this to true or false
