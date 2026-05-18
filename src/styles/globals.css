@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+[class*="donut-"][class$="-text"] {
+  top: calc(50% - 0.75em) !important;
+}
