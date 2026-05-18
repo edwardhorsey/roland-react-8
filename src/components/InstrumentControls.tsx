@@ -78,36 +78,42 @@ export default function InstrumentControls() {
                     )}
                     <Button text={"Stop"} logic={reset} />
                 </div>
-                <Donut
-                    diameter={105}
-                    min={30}
-                    max={240}
-                    step={1}
-                    value={tempo}
-                    theme={{
-                        donutColor: "Black",
-                        donutThickness: 25,
-                    }}
-                    onValueChange={updateTempo}
-                    ariaLabelledBy={"tempo"}
-                >
-                    <label id={"tempo"}>Tempo</label>
-                </Donut>
-                <Donut
-                    diameter={105}
-                    min={0}
-                    max={100}
-                    step={1}
-                    value={master}
-                    theme={{
-                        donutColor: "Black",
-                        donutThickness: 25,
-                    }}
-                    onValueChange={updateMaster}
-                    ariaLabelledBy={"master-gain"}
-                >
-                    <label id={"master-gain"}>Master Gain</label>
-                </Donut>
+                <div className="flex flex-col items-center gap-1">
+                    <Donut
+                        diameter={105}
+                        min={30}
+                        max={240}
+                        step={1}
+                        value={tempo}
+                        theme={{
+                            donutColor: "Black",
+                            donutThickness: 25,
+                        }}
+                        onValueChange={updateTempo}
+                        ariaLabelledBy="tempo"
+                    />
+                    <label id="tempo" className="text-lg font-bold">
+                        Tempo
+                    </label>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                    <Donut
+                        diameter={105}
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={master}
+                        theme={{
+                            donutColor: "Black",
+                            donutThickness: 25,
+                        }}
+                        onValueChange={updateMaster}
+                        ariaLabelledBy="master-gain"
+                    />
+                    <label id="master-gain" className="text-lg font-bold">
+                        Master Gain
+                    </label>
+                </div>
                 <FXButton
                     text={"DISTORTION"}
                     logic={distortionOn}
@@ -123,7 +129,7 @@ export default function InstrumentControls() {
                             .then((res) => console.log(res))
                             .catch((err) => console.log(err));
                     }}
-                    text="sign in"
+                    text="Save pattern"
                 />
             )}
         </section>

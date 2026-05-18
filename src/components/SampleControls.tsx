@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Donut } from "react-dial-knob";
 import MuteButton from "~/components/MuteButton";
 import useDrumMachineStore from "~/stores/useDrumMachineStore";
-import type { Track } from "~/types/tracks";
+import { trackNames, type Track } from "~/types/tracks";
 
 export default function SampleControls({ title }: { title: Track }) {
     const [state, setState] = useState({
@@ -46,7 +46,11 @@ export default function SampleControls({ title }: { title: Track }) {
                     ariaLabelledBy={title}
                 ></Donut>
             </div>
-            <MuteButton text={title} logic={mute} muted={state.mute} />
+            <MuteButton
+                text={trackNames[title]}
+                logic={mute}
+                muted={state.mute}
+            />
         </article>
     );
 }
