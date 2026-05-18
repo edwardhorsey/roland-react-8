@@ -6,6 +6,6 @@ Features
 
 -   Gain and Mute controls for the samples
 -   Distortion included for added **techno** 🖤
--   Sign in (via Discord) to save your beats
+-   Save your beats to local storage
 
 Enjoy! 🎛️
