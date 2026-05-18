@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import Step from "~/components/Step";
 import Button from "~/components/Button";
-import type { Track } from "~/types/tracks";
+import { trackNames, type Track } from "~/types/tracks";
 import useDrumMachineStore from "~/stores/useDrumMachineStore";
 
 export default function ProgramSteps({ title }: { title: Track }) {
@@ -41,7 +41,7 @@ export default function ProgramSteps({ title }: { title: Track }) {
 
     return (
         <article className="flex h-12 min-w-[1000px] items-center justify-evenly">
-            <h3 className="w-20 text-xl font-bold">{title}</h3>
+            <h3 className="w-20 text-xl font-bold whitespace-nowrap">{trackNames[title]}</h3>
             <div className="flex">{steps}</div>
             <Button
                 text="Clear"
